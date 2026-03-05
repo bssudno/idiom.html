@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Idiom club</title>
+
+  <!-- ✅ FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= RESET ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: "Poppins", sans-serif;
+      background: #02b11f;
+      color: #009207;
+    }
+
+    a { text-decoration: none; color: #000000; }
+
+    /* ================= WRAPPER ================= */
+    .wrapper {
+      min-height: 100vh;
+      background-image: url("img/america.jpg");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      padding-top: 35px;
+    }
+
+    /* ================= CONTAINER ================= */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ================= HEADER ================= */
+    header.container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 29px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: white;
+      text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000,
+         0px 4px 8px rgba(0,0,0,0.6);
+    }
+
+    /* ================= NAVIGATION ================= */
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    nav ul li { position: relative; }
+    nav ul li a { color: #ffffff; }
+
+    /* Hover underline */
+    header nav ul li:not(.active):not(.btn) a:hover {
+      border-bottom: 3px solid #dc7000;
+    }
+
+    /* Active indicator */
+    header nav ul li.active::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 5px;
+      background: #dc7000;
+      border-radius: 10px;
+    }
+
+    /* ================= CONTACT BUTTON ================= */
+    nav ul li.btn a {
+      background: #228B22;
+      padding: 9px 17px;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    nav ul li.btn a:hover { background: #f30000cb; }
+
+    /* ================= HERO ================= */
+    .hero { display: flex; align-items: center; min-height: 80vh; }
+
+    .hero--info { width: 530px; margin-top: 40px; }
+
+    .hero--info h2, .hero--info h1, .hero--info p {
+      color: white;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0px  3px 6px rgba(0,0,0,0.6);
+    }
+
+    .hero--info h2 { font-size: 20px; font-weight: 600; }
+    .hero--info h1 { font-size: 50px; font-weight: 900; margin: 15px 0; }
+    .hero--info p  { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+
+    /* ================= LESSONS BUTTON ================= */
+    .lessons-toggle {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lessons-toggle .arrow { transition: transform 0.3s ease; font-size: 12px; }
+    .dropdown.open .arrow { transform: rotate(180deg); }
+
+    /* ================= DROPDOWN ================= */
+    .submenu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: white;
+      min-width: 200px;
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      padding: 8px 0;
+      z-index: 9999;
+    }
+
+    .submenu li a { display: block; padding: 8px 12px; color: #000; }
+    .submenu li a:hover { background: #f2f2f2; }
+    .dropdown.open .submenu { display: block; }
+
+    .submenu::-webkit-scrollbar { width: 6px; }
+    .submenu::-webkit-scrollbar-thumb { background: #dc7000; border-radius: 10px; }
+
+    /* ================= PAGES (ABOUT & CONTACTS) ================= */
+    .about-page, .contacts-page { display: none; min-height: 80vh; justify-content: center; align-items: center; }
+    .about-page.active, .contacts-page.active { display: flex; }
+
+    .about-box, .contacts-box {
+      max-width: 600px;
+      padding: 50px 40px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(219, 0, 0, 0.4);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .about-box h2, .contacts-box h2 { font-size: 22px; margin-bottom: 10px; color: #ffb347; }
+
+    .about-box h1, .contacts-box h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+      color: white;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0px  3px 6px rgba(0,0,0,0.6);
+    }
+
+    .about-box p, .contacts-box p {
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 25px;
+      color: white;
+      text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0px  3px 6px rgba(0,0,0,0.6);
+    }
+
+    .about-box .btn, .contacts-box .btn {
+      background: #228B22;
+      color: #000;
+      border-radius: 50px;
+      padding: 15px 30px;
+      border: 0;
+      transition: 0.3s;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .about-box .btn:hover, .contacts-box .btn:hover { transform: scale(1.1); }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+
+    <header class="container">
+      <span class="logo">IDIOMS.COM</span>
+
+      <nav>
+        <ul>
+          <li class="active"><a href="#" id="homeBtn">Home</a></li>
+
+          <!-- ✅ DROPDOWN -->
+          <li class="dropdown" id="lessonsDropdown">
+            <a href="#" class="lessons-toggle" id="lessonsToggle">
+              Lessons <span class="arrow">▼</span>
+            </a>
+
+            <ul class="submenu" id="lessonsMenu">
+              <li><a href="idims.html">Lesson №1</a></li>
+              <li><a href="idioms2.html">Lesson №2</a></li>
+              <li><a href="idiom3.html">Lesson №3</a></li>
+              <li><a href="idiom4.html">Lesson №4</a></li>
+              <li><a href="lesson5.html">Lesson №5</a></li>
+              <li><a href="Untitled-1.html">Lesson №6</a></li>
+            </ul>
+          </li>
+
+          <!-- ✅ HERE: Tasks now opens tasks.html -->
+          <li><a href="tasks.html" id="tasksBtn">Tasks</a></li>
+
+          <li><a href="#" id="aboutBtn">About us</a></li>
+          <li class="btn"><a href="#" id="contactsBtn">Contacts</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- ✅ HERO -->
+    <div class="hero container" id="hero">
+      <div class="hero--info">
+        <h2>Useful Idioms</h2>
+        <h1>The most useful idioms are collected here.</h1>
+        <p>If you want to speak like a native speaker, this collection of useful idioms will help you.</p>
+      </div>
+    </div>
+
+    <!-- ✅ ABOUT PAGE -->
+    <div class="about-page container" id="aboutPage">
+      <div class="about-box">
+        <h2>About our club</h2>
+        <h1>Hello everyone!</h1>
+        <p>
+          We have a club in <b>American Corner</b>,
+          and if you want to join us go to
+          <b>Pushkin Library</b>.
+        </p>
+        <button class="btn" id="backHome">Back to Home</button>
+      </div>
+    </div>
+
+    <!-- ✅ CONTACTS PAGE -->
+    <div class="contacts-page container" id="contactsPage">
+      <div class="contacts-box">
+        <h2>Contacts</h2>
+        <h1>Get in touch</h1>
+        <p>
+          To contact us, please use the following numbers:<br>
+          <b>+7 776 632 9313</b><br>
+          <b>+7 777 671 0663</b>
+        </p>
+        <button class="btn" id="backHomeFromContacts">Back to Home</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ===== LESSONS DROPDOWN =====
+    const lessonsToggle = document.getElementById("lessonsToggle");
+    const lessonsDropdown = document.getElementById("lessonsDropdown");
+
+    if (lessonsToggle && lessonsDropdown) {
+      lessonsToggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        lessonsDropdown.classList.toggle("open");
+      });
+
+      document.addEventListener("click", function () {
+        lessonsDropdown.classList.remove("open");
+      });
+    }
+
+    // ===== PAGES =====
+    const hero = document.getElementById("hero");
+
+    const aboutBtn = document.getElementById("aboutBtn");
+    const aboutPage = document.getElementById("aboutPage");
+    const backHome = document.getElementById("backHome");
+
+    const contactsBtn = document.getElementById("contactsBtn");
+    const contactsPage = document.getElementById("contactsPage");
+    const backHomeFromContacts = document.getElementById("backHomeFromContacts");
+
+    const homeBtn = document.getElementById("homeBtn");
+
+    function showHome() {
+      if (aboutPage) aboutPage.classList.remove("active");
+      if (contactsPage) contactsPage.classList.remove("active");
+      if (hero) hero.style.display = "flex";
+      if (lessonsDropdown) lessonsDropdown.classList.remove("open");
+    }
+
+    function showAbout() {
+      if (hero) hero.style.display = "none";
+      if (contactsPage) contactsPage.classList.remove("active");
+      if (aboutPage) aboutPage.classList.add("active");
+      if (lessonsDropdown) lessonsDropdown.classList.remove("open");
+    }
+
+    function showContacts() {
+      if (hero) hero.style.display = "none";
+      if (aboutPage) aboutPage.classList.remove("active");
+      if (contactsPage) contactsPage.classList.add("active");
+      if (lessonsDropdown) lessonsDropdown.classList.remove("open");
+    }
+
+    // ABOUT click
+    if (aboutBtn) {
+      aboutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        showAbout();
+      });
+    }
+
+    // CONTACTS click
+    if (contactsBtn) {
+      contactsBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        showContacts();
+      });
+    }
+
+    // BACK buttons
+    if (backHome) backHome.addEventListener("click", showHome);
+    if (backHomeFromContacts) backHomeFromContacts.addEventListener("click", showHome);
+
+    // HOME click
+    if (homeBtn) {
+      homeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        showHome();
+      });
+    }
+
+    // ✅ IMPORTANT:
+    // We REMOVED tasksBtn JS handler.
+    // Now <a href="tasks.html"> will open tasks.html automatically.
+
+    // Esc to close pages
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") showHome();
+    });
+  </script>
+</body>
+</html>

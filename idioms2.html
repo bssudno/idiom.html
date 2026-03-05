@@ -1,0 +1,1363 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Idiom Fun Club — Speak Like a Native</title>
+  <meta name="description" content="Idiom Fun Club: idioms, mini games, quiz, homework." />
+
+  <style>
+    :root{
+      --bg:#0e0b0b;
+      --panel:#161111;
+      --panel2:#1d1515;
+      --text:#f4f0ed;
+      --muted:#cdbfb7;
+      --muted2:#a8968b;
+      --accent:#7c2323;     /* бордовый */
+      --accent2:#d0b07a;    /* тёплое золото */
+      --line:rgba(255,255,255,.09);
+      --shadow: 0 16px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1100px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 600px at 12% 0%, rgba(124,35,35,.35), transparent 60%),
+        radial-gradient(900px 500px at 95% 12%, rgba(208,176,122,.18), transparent 55%),
+        radial-gradient(900px 600px at 40% 110%, rgba(124,35,35,.22), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      font: 16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit; text-decoration:none}
+    button, input{font:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 18px}
+
+    /* Top bar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(10,7,7,.85), rgba(10,7,7,.55));
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:12px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 220px;
+    }
+    .logo{
+      width:42px; height:42px; border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(208,176,122,.6), rgba(208,176,122,.12) 45%, transparent 70%),
+        linear-gradient(135deg, rgba(124,35,35,.95), rgba(30,18,18,.95));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      position:relative;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:11px;
+      border-radius:10px;
+      border:1px dashed rgba(255,255,255,.18);
+    }
+    .brand-title{
+      display:flex; flex-direction:column;
+      line-height:1.15;
+    }
+    .brand-title b{
+      letter-spacing:.5px;
+      font-size:14px;
+    }
+    .brand-title span{
+      color:var(--muted2);
+      font-size:12px;
+    }
+
+    .nav{
+      display:flex; align-items:center; gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+    .pill{
+      padding:9px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      color:var(--muted);
+      background: rgba(255,255,255,.03);
+      transition: .2s ease;
+      white-space:nowrap;
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill:hover{transform: translateY(-1px); border-color: rgba(208,176,122,.25); color:var(--text)}
+    .pill.active{
+      background: linear-gradient(135deg, rgba(124,35,35,.85), rgba(208,176,122,.16));
+      border-color: rgba(208,176,122,.35);
+      color: var(--text);
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
+    }
+
+    .actions{
+      display:flex; align-items:center; gap:10px;
+      min-width: 220px;
+      justify-content:flex-end;
+    }
+    .iconbtn{
+      width:42px; height:42px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      display:grid; place-items:center;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .iconbtn:hover{transform: translateY(-1px); border-color: rgba(208,176,122,.28)}
+    .hamburger{display:none}
+
+    /* Hero */
+    .hero{
+      padding: 32px 0 18px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card .inner{padding:22px}
+    .hero-title{
+      font-size: 40px;
+      line-height:1.05;
+      margin:0 0 10px;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      color:var(--muted);
+      margin:0 0 16px;
+      max-width: 60ch;
+    }
+    .badge-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(208,176,122,.12);
+    }
+    .cta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
+    .btn{
+      padding:10px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(208,176,122,.32);
+      background: linear-gradient(135deg, rgba(124,35,35,.92), rgba(208,176,122,.18));
+      color: var(--text);
+      cursor:pointer;
+      transition: .2s ease;
+      display:inline-flex; align-items:center; gap:10px;
+    }
+    .btn:hover{transform: translateY(-1px); filter:saturate(1.1)}
+    .btn.secondary{
+      border-color: var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+    }
+
+    .hero-side{
+      display:grid;
+      grid-template-rows: 1fr 1fr;
+      gap:18px;
+    }
+    .stat{
+      display:flex; align-items:flex-start; gap:14px;
+    }
+    .stat .num{
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:.3px;
+      color: var(--accent2);
+      line-height:1;
+    }
+    .stat p{margin:0; color:var(--muted)}
+    .stat b{color:var(--text)}
+    .ornament{
+      position:absolute;
+      right:-120px; top:-120px;
+      width:320px; height:320px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(208,176,122,.22), transparent 60%);
+      filter: blur(1px);
+      pointer-events:none;
+    }
+    .ornament2{
+      position:absolute;
+      left:-140px; bottom:-160px;
+      width:360px; height:360px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 60% 40%, rgba(124,35,35,.24), transparent 62%);
+      pointer-events:none;
+    }
+
+    /* Sections */
+    section{padding: 18px 0}
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      margin: 6px 0 12px;
+    }
+    h2{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.2px;
+    }
+    .hint{color: var(--muted2); font-size:13px}
+
+    /* Toolbar */
+    .toolbar{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      width:100%;
+    }
+    .search{
+      flex: 1 1 260px;
+      display:flex; gap:10px; align-items:center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .search input{
+      width:100%;
+      border:0; outline:0;
+      background: transparent;
+      color: var(--text);
+    }
+    .chiprow{display:flex; gap:8px; flex-wrap:wrap}
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-size:13px;
+      cursor:pointer;
+      transition:.2s ease;
+      user-select:none;
+    }
+    .chip:hover{border-color: rgba(208,176,122,.25); color:var(--text)}
+    .chip.active{
+      background: rgba(208,176,122,.14);
+      border-color: rgba(208,176,122,.35);
+      color: var(--text);
+    }
+
+    /* Idiom grid */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    .idiom{
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      overflow:hidden;
+      position:relative;
+      transition:.2s ease;
+      min-height: 150px;
+      display:flex;
+      flex-direction:column;
+    }
+    .idiom:hover{transform: translateY(-2px); border-color: rgba(208,176,122,.22)}
+    .idiom-top{
+      padding: 14px 14px 10px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .idiom h3{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .tag{
+      font-size:12px;
+      color: var(--accent2);
+      border:1px solid rgba(208,176,122,.25);
+      padding:6px 9px;
+      border-radius:999px;
+      background: rgba(208,176,122,.08);
+      white-space:nowrap;
+    }
+    .idiom-body{
+      padding: 0 14px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .idiom-footer{
+      margin-top:auto;
+      padding: 12px 14px;
+      border-top:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background: rgba(0,0,0,.12);
+    }
+    .smallbtn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      border-radius: 12px;
+      padding:8px 10px;
+      cursor:pointer;
+      transition:.2s ease;
+      font-size: 13px;
+    }
+    .smallbtn:hover{border-color: rgba(208,176,122,.25); transform: translateY(-1px)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color: var(--muted2)}
+
+    /* Links cards */
+    .links{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    .linkcard{
+      padding:16px;
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .linkcard b{font-size:15px}
+    .linkcard p{margin:0; color:var(--muted)}
+    .linkcard .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .link{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(208,176,122,.28);
+      background: rgba(208,176,122,.08);
+      cursor:pointer;
+      transition:.2s ease;
+      color: var(--text);
+    }
+    .link:hover{transform: translateY(-1px); border-color: rgba(208,176,122,.42)}
+    .copy{
+      border-color: var(--line);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* Quiz */
+    .quiz{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:12px;
+    }
+    .qbox{
+      border-radius: var(--radius2);
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      padding:18px;
+      min-height: 220px;
+    }
+    .qtop{
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      margin-bottom:10px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .question{
+      margin: 4px 0 12px;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+    .opts{display:grid; gap:10px}
+    .opt{
+      text-align:left;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .opt:hover{transform: translateY(-1px); border-color: rgba(208,176,122,.22)}
+    .opt.correct{border-color: rgba(92, 190, 120, .55); background: rgba(92,190,120,.10)}
+    .opt.wrong{border-color: rgba(240, 92, 92, .55); background: rgba(240,92,92,.10)}
+    .quizside{
+      display:grid; gap:12px;
+    }
+    .score{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:16px;
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+    }
+    .score b{font-size: 18px}
+    .bar{
+      height:10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .bar > i{
+      display:block; height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(208,176,122,.9), rgba(124,35,35,.9));
+      transition: width .25s ease;
+    }
+
+    /* Footer */
+    footer{
+      padding: 26px 0 40px;
+      border-top:1px solid var(--line);
+      margin-top: 18px;
+      color: var(--muted2);
+    }
+    .footgrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      align-items:start;
+    }
+    .kicker{font-size:13px; color:var(--muted2)}
+    .credits{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-top:10px;
+    }
+    .pillmini{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0; z-index:80;
+      display:none;
+      align-items:center; justify-content:center;
+      background: rgba(0,0,0,.6);
+      padding:18px;
+    }
+    .modal.open{display:flex}
+    .modal-card{
+      width:min(820px, 100%);
+      border-radius: var(--radius2);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(20,14,14,.98), rgba(16,10,10,.98));
+      box-shadow: 0 24px 80px rgba(0,0,0,.55);
+      overflow:hidden;
+      position:relative;
+    }
+    .modal-head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .modal-head b{font-size:14px}
+    .modal-body{padding:16px}
+    .modal-body p{margin:8px 0; color:var(--muted)}
+    .modal-body .ex{
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      margin-top:10px;
+    }
+    .close{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      border-radius: 12px;
+      padding:8px 10px;
+      cursor:pointer;
+    }
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform: translateX(-50%);
+      background: rgba(20,14,14,.95);
+      border:1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      display:none;
+      z-index:90;
+      max-width: min(760px, calc(100% - 24px));
+    }
+    .toast.show{display:block}
+    .toast span{color: var(--muted)}
+    .toast b{color: var(--accent2)}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns: 1fr}
+      .hero-side{grid-template-rows: unset; grid-template-columns: 1fr 1fr}
+      .grid{grid-template-columns: repeat(2, 1fr)}
+      .quiz{grid-template-columns: 1fr}
+      .actions{min-width: auto}
+      .brand{min-width:auto}
+    }
+    @media (max-width: 640px){
+      .nav{display:none}
+      .hamburger{display:grid}
+      .hero-title{font-size: 34px}
+      .grid{grid-template-columns: 1fr}
+      .links{grid-template-columns: 1fr}
+      .hero-side{grid-template-columns: 1fr}
+    }
+
+    /* Mobile menu */
+    .drawer{
+      position:fixed; inset:0; z-index:60;
+      display:none;
+      background: rgba(0,0,0,.55);
+    }
+    .drawer.open{display:block}
+    .drawer-panel{
+      position:absolute; right:0; top:0; height:100%;
+      width:min(360px, 92vw);
+      background: linear-gradient(180deg, rgba(18,12,12,.98), rgba(14,9,9,.98));
+      border-left:1px solid rgba(255,255,255,.10);
+      padding:14px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .drawer-panel .pill{width:100%; text-align:left}
+    .drawer-panel .row{display:flex; justify-content:space-between; align-items:center}
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand" role="banner" aria-label="Idiom Fun Club">
+          <div class="logo" aria-hidden="true"></div>
+          <div class="brand-title">
+            <b>IDIOM FUN CLUB</b>
+            <span>Speak Like a Native</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Навигация">
+          <div class="pill active" data-go="home">Home</div>
+          <div class="pill" data-go="idioms">Idioms</div>
+          <div class="pill" data-go="games">Mini games</div>
+          <div class="pill" data-go="quiz">Test</div>
+          <div class="pill" data-go="homework">Homework</div>
+          <div class="pill" data-go="contact">Feedback</div>
+        </nav>
+
+        <div class="actions">
+          <button class="iconbtn" id="toggleTheme" title="Сменить фон" aria-label="Сменить фон">
+            ☾
+          </button>
+          <button class="iconbtn hamburger" id="openDrawer" title="Меню" aria-label="Открыть меню">
+            ☰
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Меню">
+      <div class="row">
+        <b>Меню</b>
+        <button class="close" id="closeDrawer">✕</button>
+      </div>
+      <div class="pill active" data-go="home">Home</div>
+      <div class="pill" data-go="idioms">Idioms</div>
+      <div class="pill" data-go="games">Mini games</div>
+      <div class="pill" data-go="quiz">Test</div>
+      <div class="pill" data-go="homework">Homework</div>
+      <div class="pill" data-go="contact">Feedback</div>
+      <div class="kicker">Подсказка: нажми на идиому, чтобы увидеть перевод и пример.</div>
+    </div>
+  </div>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-grid">
+        <div class="card">
+          <div class="ornament" aria-hidden="true"></div>
+          <div class="ornament2" aria-hidden="true"></div>
+          <div class="inner">
+            <h1 class="hero-title">Idiom Fun Club</h1>
+            <p class="subtitle">
+              Учим английские идиомы через карточки, мини-игры и тест.
+              Нажимай на идиомы — откроется перевод и пример.
+            </p>
+
+            <div class="badge-row">
+              <span class="badge"><span class="dot"></span> Past idioms + New set</span>
+              <span class="badge"><span class="dot"></span> Mini games (Genially)</span>
+              <span class="badge"><span class="dot"></span> Quiz + Score</span>
+            </div>
+
+            <div class="cta-row">
+              <button class="btn" data-go="idioms">Начать с идиом →</button>
+              <button class="btn secondary" id="shuffleBtn">Перемешать карточки</button>
+            </div>
+
+            <div style="margin-top:14px" class="kicker">
+              Источник материалов: твой файл “Idiom fun club 2” :contentReference[oaicite:1]{index=1}
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="card">
+            <div class="inner">
+              <div class="stat">
+                <div class="num" id="countIdioms">15</div>
+                <div>
+                  <p><b>Idioms in lesson</b><br><span>С переводом RU и примерами</span></p>
+                </div>
+              </div>
+              <div style="height:12px"></div>
+              <div class="stat">
+                <div class="num">2</div>
+                <div>
+                  <p><b>Mini games</b><br><span>Guess the character + Word search</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="inner">
+              <div class="stat">
+                <div class="num">6</div>
+                <div>
+                  <p><b>Past idioms</b><br><span>Короткое повторение</span></p>
+                </div>
+              </div>
+              <div style="height:12px"></div>
+              <div class="stat">
+                <div class="num">∞</div>
+                <div>
+                  <p><b>Practice</b><br><span>Составь мини-эссе/предложение</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IDIOMS -->
+    <section id="idioms">
+      <div class="section-head">
+        <div>
+          <h2>Idioms</h2>
+          <div class="hint">Поиск работает по названию, переводу и примеру</div>
+        </div>
+        <div class="toolbar">
+          <div class="search" role="search">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="Например: masterpiece, time, tradition..." autocomplete="off" />
+            <button class="smallbtn" id="clearSearch" title="Очистить">Очистить</button>
+          </div>
+          <div class="chiprow" aria-label="Фильтры">
+            <div class="chip active" data-filter="all">All</div>
+            <div class="chip" data-filter="art">Art</div>
+            <div class="chip" data-filter="time">Time</div>
+            <div class="chip" data-filter="people">People</div>
+            <div class="chip" data-filter="ideas">Ideas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" id="idiomGrid" aria-live="polite"></div>
+    </section>
+
+    <!-- MINI GAMES -->
+    <section id="games">
+      <div class="section-head">
+        <div>
+          <h2>Mini games</h2>
+          <div class="hint">Откроются в новой вкладке</div>
+        </div>
+      </div>
+
+      <div class="links">
+        <div class="linkcard">
+          <b>Ice-breaking: Guess the character</b>
+          <p>Разминка (Genially). Ссылка из твоих слайдов.</p>
+          <div class="row">
+            <a class="link" target="_blank" rel="noopener" href="https://view.genially.com/6946d5206888e4bbf0c9b7d0/interactive-content-guess-the-character">
+              ▶ Открыть
+            </a>
+            <button class="link copy" data-copy="https://view.genially.com/6946d5206888e4bbf0c9b7d0/interactive-content-guess-the-character">
+              ⧉ Копировать
+            </button>
+          </div>
+        </div>
+
+        <div class="linkcard">
+          <b>Word search</b>
+          <p>Мини-игра “найди слова” (Genially). Ссылка из твоих слайдов.</p>
+          <div class="row">
+            <a class="link" target="_blank" rel="noopener" href="https://view.genially.com/69455bc51562ec4b064a8c72/interactive-content-word-search">
+              ▶ Открыть
+            </a>
+            <button class="link copy" data-copy="https://view.genially.com/69455bc51562ec4b064a8c72/interactive-content-word-search">
+              ⧉ Копировать
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz">
+      <div class="section-head">
+        <div>
+          <h2>Test</h2>
+          <div class="hint">Выбирай вариант A/B/C — сразу увидишь результат</div>
+        </div>
+        <div class="toolbar" style="justify-content:flex-end">
+          <button class="btn secondary" id="restartQuiz">Сбросить тест</button>
+        </div>
+      </div>
+
+      <div class="quiz">
+        <div class="qbox">
+          <div class="qtop">
+            <div id="qCounter">Question 1 / 6</div>
+            <div class="mono" id="qTopic">IDIOMS • practice</div>
+          </div>
+          <div class="question" id="qText">...</div>
+          <div class="opts" id="qOpts"></div>
+          <div style="height:10px"></div>
+          <div class="toolbar" style="justify-content:space-between">
+            <button class="smallbtn" id="prevQ">← Назад</button>
+            <button class="smallbtn" id="nextQ">Дальше →</button>
+          </div>
+        </div>
+
+        <div class="quizside">
+          <div class="score">
+            <div>
+              <div class="kicker">Твой результат</div>
+              <b><span id="scoreNow">0</span> / <span id="scoreTotal">6</span></b>
+            </div>
+            <div style="min-width: 160px">
+              <div class="kicker">Прогресс</div>
+              <div class="bar" aria-label="Progress bar"><i id="barFill"></i></div>
+            </div>
+          </div>
+
+          <div class="linkcard" style="height:100%">
+            <b>Подсказка</b>
+            <p>
+              Если сложно — вернись к карточкам идиом: там есть перевод и пример.
+              Можно также “перемешать” карточки сверху.
+            </p>
+            <div class="row">
+              <button class="link" data-go="idioms">↗ Открыть Idioms</button>
+              <button class="link copy" id="copyScore">⧉ Скопировать результат</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOMEWORK -->
+    <section id="homework">
+      <div class="section-head">
+        <div>
+          <h2>Homework</h2>
+          <div class="hint">Написать мини-эссе или предложения с идиомами</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="inner">
+          <p style="margin:0 0 10px; color:var(--muted)">
+            Задание (как на слайде): <b>Написать мини-эссе или предложения с идиомами, которые мы прошли.</b>
+          </p>
+
+          <div class="ex">
+            <b>Шаблон (можешь копировать):</b>
+            <div class="mono" style="margin-top:8px; white-space:pre-wrap">
+1) Today I had a <u>light-bulb moment</u> when I understood...
+2) This sculpture has <u>stood the test of time</u> because...
+3) Leonardo da Vinci was a true <u>renaissance man</u>, so...
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="toolbar" style="justify-content:flex-start">
+            <button class="btn secondary" id="copyTemplate">Копировать шаблон</button>
+            <button class="btn" id="openPractice">Открыть тренировку (карточки)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / FEEDBACK -->
+    <section id="contact">
+      <div class="section-head">
+        <div>
+          <h2>Feedback</h2>
+          <div class="hint">Бот и группа (можешь вставить свою ссылку/QR)</div>
+        </div>
+      </div>
+
+      <div class="links">
+        <div class="linkcard">
+          <b>Feedback Bot</b>
+          <p>В твоих слайдах указан ник: <span class="mono">@IdiomReview_Bot</span></p>
+          <div class="row">
+            <button class="link copy" data-copy="@IdiomReview_Bot">⧉ Копировать ник</button>
+            <button class="link" id="openTelegram">↗ Открыть Telegram</button>
+          </div>
+          <div class="kicker">Если у бота есть ссылка (t.me/...), вставь её сюда — я быстро обновлю.</div>
+        </div>
+
+        <div class="linkcard">
+          <b>WhatsApp Group</b>
+          <p>
+            В конце слайдов есть QR на WhatsApp-группу. Если дашь ссылку на группу —
+            сайт сможет открывать её в один клик.
+          </p>
+          <div class="row">
+            <input id="waLink" value="https://chat.whatsapp.com/Fx4iJrcXeKx6fLL4GjLstu" placeholder="Вставь ссылку WhatsApp (например https://chat.whatsapp.com/...)" style="
+              flex:1 1 240px; padding:10px 12px; border-radius:14px; border:1px solid var(--line);
+              background: rgba(255,255,255,.03); color: var(--text); outline: none;">
+            <button class="link" id="openWA">▶ Открыть</button>
+          </div>
+          <div class="kicker">Можно оставить пустым — тогда кнопка попросит вставить ссылку.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footgrid">
+        <div>
+          <b>Idiom Fun Club</b>
+          <div class="kicker">One-page website • HTML + CSS + JS</div>
+          <div class="credits">
+            <span class="pillmini">Cards</span>
+            <span class="pillmini">Search</span>
+            <span class="pillmini">Mini games</span>
+            <span class="pillmini">Quiz</span>
+            <span class="pillmini">Homework</span>
+          </div>
+        </div>
+        <div>
+          <div class="kicker">Подсказка для учителя</div>
+          <div style="color:var(--muted); margin-top:6px">
+            Можно открыть на проекторе: сначала “Mini games” (разминка),
+            потом “Idioms”, затем “Test”, и в конце “Homework”.
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Idiom details">
+      <div class="modal-head">
+        <b id="mTitle">Idiom</b>
+        <button class="close" id="mClose">Закрыть ✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="mono" id="mTag">tag</div>
+        <p id="mRu"></p>
+        <div class="ex" id="mExample"></div>
+        <div style="height:12px"></div>
+        <div class="toolbar">
+          <button class="smallbtn" id="mCopy">⧉ Копировать (EN + RU + example)</button>
+          <button class="smallbtn" id="mNext">Следующая →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ===== Data (из твоих слайдов) =====
+    const pastIdioms = [
+      "A light-bulb moment",
+      "To push someone’s buttons",
+      "To be on the same wavelength",
+      "Once in a blue moon",
+      "Bite your tongue",
+      "Take your time"
+    ];
+
+    const idioms = [
+      { id:"work_of_art", en:"A work of art", ru:"произведение искусства", ex:"The Parthenon is a true work of art.", tag:"art" },
+      { id:"stand_test_time", en:"Stand the test of time", ru:"выдержать испытание временем", ex:"Ancient Egyptian art has stood the test of time.", tag:"time" },
+      { id:"carved_stone", en:"Carved in stone", ru:"высечено в камне (неизменно)", ex:"Their laws were carved in stone.", tag:"time" },
+      { id:"timeless_beauty", en:"Timeless beauty", ru:"вечная красота", ex:"Greek sculptures represent timeless beauty.", tag:"art" },
+      { id:"leave_mark", en:"Leave one’s mark", ru:"оставить след в истории", ex:"Ancient civilizations left their mark through art.", tag:"people" },
+      { id:"renaissance_man", en:"A renaissance man", ru:"человек эпохи Возрождения (разносторонний гений)", ex:"Leonardo da Vinci was a true renaissance man.", tag:"people" },
+      { id:"break_tradition", en:"Break with tradition", ru:"порвать с традициями", ex:"Renaissance artists broke with medieval traditions.", tag:"ideas" },
+      { id:"ahead_time", en:"Ahead of one’s time", ru:"опережать своё время", ex:"Many Renaissance thinkers were ahead of their time.", tag:"ideas" },
+      { id:"bring_life", en:"Bring something to life", ru:"оживить (через искусство)", ex:"Artists brought religious stories to life.", tag:"art" },
+      { id:"new_lens", en:"See the world through a new lens", ru:"увидеть мир по-новому", ex:"The Renaissance helped people see the world through a new lens.", tag:"ideas" },
+      { id:"stroke_genius", en:"A stroke of genius", ru:"гениальный ход", ex:"That solution was a stroke of genius.", tag:"ideas" },
+      { id:"masterpiece", en:"Masterpiece", ru:"шедевр", ex:"This painting is considered a masterpiece.", tag:"art" },
+      { id:"shape_history", en:"Shape history", ru:"формировать историю", ex:"Innovations can shape history.", tag:"ideas" },
+      { id:"inspired_past", en:"Inspired by the past", ru:"вдохновлённый прошлым", ex:"Her design is inspired by the past.", tag:"time" },
+      { id:"art_mirrors", en:"Art mirrors society", ru:"искусство отражает общество", ex:"Many believe art mirrors society.", tag:"art" },
+    ];
+
+    // Quiz (по структуре из слайдов: A/B/C)
+    const quiz = [
+      {
+        q:"Leonardo da Vinci was a…",
+        opts:[{k:"A",t:"piece of cake"},{k:"B",t:"renaissance man"},{k:"C",t:"under the weather"}],
+        ans:"B"
+      },
+      {
+        q:"This ancient statue has…",
+        opts:[{k:"A",t:"stood the test of time"},{k:"B",t:"once in a blue moon"},{k:"C",t:"bring something to life"}],
+        ans:"A"
+      },
+      {
+        q:"Every masterpiece…",
+        opts:[{k:"A",t:"is carved in stone"},{k:"B",t:"piece of cake"},{k:"C",t:"under the weather"}],
+        ans:"A"
+      },
+      {
+        q:"This painting helps people…",
+        opts:[{k:"A",t:"see the world through a new lens"},{k:"B",t:"once in a blue moon"},{k:"C",t:"piece of cake"}],
+        ans:"A"
+      },
+      {
+        q:"That sculpture shows…",
+        opts:[{k:"A",t:"timeless beauty"},{k:"B",t:"ahead of one’s time"},{k:"C",t:"break with tradition"}],
+        ans:"A"
+      },
+      {
+        q:"He wanted to…",
+        opts:[{k:"A",t:"shape history"},{k:"B",t:"under the weather"},{k:"C",t:"bring something to life"}],
+        ans:"A"
+      }
+    ];
+
+    // ===== Helpers =====
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+    const toastEl = $("#toast");
+    let toastTimer = null;
+    function toast(html){
+      clearTimeout(toastTimer);
+      toastEl.innerHTML = html;
+      toastEl.classList.add("show");
+      toastTimer = setTimeout(()=> toastEl.classList.remove("show"), 2200);
+    }
+
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      const y = el.getBoundingClientRect().top + window.scrollY - 78;
+      window.scrollTo({top:y, behavior:"smooth"});
+    }
+
+    // ===== Navigation =====
+    function setActiveNav(id){
+      $$(".pill[data-go]").forEach(p => p.classList.toggle("active", p.dataset.go === id));
+      $$(".drawer .pill[data-go]").forEach(p => p.classList.toggle("active", p.dataset.go === id));
+    }
+
+    function go(id){
+      setActiveNav(id);
+      scrollToId(id);
+      closeDrawer();
+    }
+
+    $$(".pill[data-go]").forEach(p=>{
+      p.addEventListener("click", ()=> go(p.dataset.go));
+    });
+
+    // ===== Drawer =====
+    const drawer = $("#drawer");
+    function openDrawer(){
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden","false");
+    }
+    function closeDrawer(){
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden","true");
+    }
+    $("#openDrawer")?.addEventListener("click", openDrawer);
+    $("#closeDrawer")?.addEventListener("click", closeDrawer);
+    drawer?.addEventListener("click", (e)=>{ if(e.target === drawer) closeDrawer(); });
+
+    // ===== Theme toggle (просто меняем фон на чуть светлее/темнее) =====
+    let dark = true;
+    $("#toggleTheme").addEventListener("click", ()=>{
+      dark = !dark;
+      document.body.style.filter = dark ? "none" : "brightness(1.08) contrast(1.02)";
+      toast(dark ? "Тема: <b>Dark</b>" : "Тема: <b>Light+</b>");
+    });
+
+    // ===== Render idioms =====
+    const grid = $("#idiomGrid");
+    const countIdioms = $("#countIdioms");
+    countIdioms.textContent = String(idioms.length);
+
+    let currentFilter = "all";
+    let currentSearch = "";
+
+    function matches(item){
+      const s = currentSearch.trim().toLowerCase();
+      const inSearch = !s || (item.en + " " + item.ru + " " + item.ex).toLowerCase().includes(s);
+      const inFilter = (currentFilter === "all") || item.tag === currentFilter;
+      return inSearch && inFilter;
+    }
+
+    function render(){
+      const items = idioms.filter(matches);
+      grid.innerHTML = "";
+      if(items.length === 0){
+        grid.innerHTML = `
+          <div class="card" style="grid-column:1/-1">
+            <div class="inner">
+              <b>Ничего не найдено</b>
+              <div class="kicker" style="margin-top:6px">Попробуй другое слово или фильтр.</div>
+            </div>
+          </div>`;
+        return;
+      }
+
+      for(const item of items){
+        const el = document.createElement("article");
+        el.className = "idiom";
+        el.innerHTML = `
+          <div class="idiom-top">
+            <div>
+              <h3>${escapeHtml(item.en)}</h3>
+              <div class="mono" style="margin-top:6px">${escapeHtml(item.ru)}</div>
+            </div>
+            <div class="tag">${escapeHtml(item.tag)}</div>
+          </div>
+          <div class="idiom-body">${escapeHtml(item.ex)}</div>
+          <div class="idiom-footer">
+            <button class="smallbtn" data-open="${item.id}">Открыть</button>
+            <button class="smallbtn" data-copy="${item.id}">⧉ Copy</button>
+          </div>
+        `;
+        grid.appendChild(el);
+      }
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    render();
+
+    // Search
+    $("#searchInput").addEventListener("input", (e)=>{
+      currentSearch = e.target.value || "";
+      render();
+    });
+    $("#clearSearch").addEventListener("click", ()=>{
+      $("#searchInput").value = "";
+      currentSearch = "";
+      render();
+      toast("Поиск очищен");
+    });
+
+    // Filters
+    $$(".chip").forEach(ch=>{
+      ch.addEventListener("click", ()=>{
+        currentFilter = ch.dataset.filter;
+        $$(".chip").forEach(x => x.classList.toggle("active", x === ch));
+        render();
+      });
+    });
+
+    // Shuffle
+    $("#shuffleBtn").addEventListener("click", ()=>{
+      shuffle(idioms);
+      render();
+      toast("Карточки <b>перемешаны</b>");
+    });
+
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // ===== Modal idiom =====
+    const modal = $("#modal");
+    const mTitle = $("#mTitle");
+    const mTag = $("#mTag");
+    const mRu = $("#mRu");
+    const mExample = $("#mExample");
+    const mCopyBtn = $("#mCopy");
+
+    let modalIndex = 0;
+
+    function openModalById(id){
+      const idx = idioms.findIndex(x => x.id === id);
+      if(idx < 0) return;
+      modalIndex = idx;
+      openModal(idioms[idx]);
+    }
+
+    function openModal(item){
+      mTitle.textContent = item.en;
+      mTag.textContent = "tag: " + item.tag;
+      mRu.innerHTML = "<b>RU:</b> " + escapeHtml(item.ru);
+      mExample.innerHTML = "<b>Example:</b><br>" + escapeHtml(item.ex);
+      mCopyBtn.dataset.payload = `${item.en} — ${item.ru}\nExample: ${item.ex}`;
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+
+    $("#mClose").addEventListener("click", closeModal);
+    modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+    window.addEventListener("keydown", (e)=>{ if(e.key === "Escape" && modal.classList.contains("open")) closeModal(); });
+
+    $("#mNext").addEventListener("click", ()=>{
+      modalIndex = (modalIndex + 1) % idioms.length;
+      openModal(idioms[modalIndex]);
+    });
+
+    $("#mCopy").addEventListener("click", async (e)=>{
+      const text = e.currentTarget.dataset.payload || "";
+      await copyText(text);
+      toast("Скопировано: <b>idiom</b>");
+    });
+
+    // Open / copy from cards
+    grid.addEventListener("click", async (e)=>{
+      const openBtn = e.target.closest("[data-open]");
+      const copyBtn = e.target.closest("[data-copy]");
+      if(openBtn){
+        openModalById(openBtn.dataset.open);
+      }
+      if(copyBtn){
+        const id = copyBtn.dataset.copy;
+        const item = idioms.find(x => x.id === id);
+        if(!item) return;
+        await copyText(`${item.en} — ${item.ru}\nExample: ${item.ex}`);
+        toast("Скопировано: <b>EN + RU + example</b>");
+      }
+    });
+
+    // ===== Copy buttons (links etc.) =====
+    $$(".copy[data-copy]").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        await copyText(btn.dataset.copy);
+        toast("Скопировано: <b>текст/ссылка</b> <span>в буфер</span>");
+      });
+    });
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+      }catch{
+        // fallback
+        const t = document.createElement("textarea");
+        t.value = text;
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        t.remove();
+      }
+    }
+
+    // ===== Mini helpers buttons =====
+    $("#openPractice").addEventListener("click", ()=> go("idioms"));
+    $("#copyTemplate").addEventListener("click", async ()=>{
+      const template =
+`1) Today I had a light-bulb moment when I understood...
+2) This sculpture has stood the test of time because...
+3) Leonardo da Vinci was a true renaissance man, so...`;
+      await copyText(template);
+      toast("Шаблон <b>скопирован</b>");
+    });
+
+    $("#openTelegram").addEventListener("click", ()=>{
+      window.open("https://web.telegram.org/", "_blank", "noopener");
+      toast("Открываю <b>Telegram Web</b>");
+    });
+
+    $("#openWA").addEventListener("click", ()=>{
+      const link = ($("#waLink").value || "").trim();
+      if(!link){
+        toast("Вставь ссылку WhatsApp в поле справа 😊");
+        $("#waLink").focus();
+        return;
+      }
+      window.open(link, "_blank", "noopener");
+    });
+
+    // ===== Quiz =====
+    const qCounter = $("#qCounter");
+    const qText = $("#qText");
+    const qOpts = $("#qOpts");
+    const scoreNow = $("#scoreNow");
+    const scoreTotal = $("#scoreTotal");
+    const barFill = $("#barFill");
+
+    scoreTotal.textContent = String(quiz.length);
+
+    let qi = 0;
+    // answers: {0:'A'|'B'|'C'}
+    const answers = new Map();
+
+    function renderQ(){
+      const item = quiz[qi];
+      qCounter.textContent = `Question ${qi+1} / ${quiz.length}`;
+      qText.textContent = item.q;
+
+      qOpts.innerHTML = "";
+      for(const opt of item.opts){
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.dataset.k = opt.k;
+        b.innerHTML = `<b>${opt.k})</b> ${escapeHtml(opt.t)}`;
+        qOpts.appendChild(b);
+      }
+
+      // mark if answered
+      const chosen = answers.get(qi);
+      if(chosen){
+        markAnswers(chosen, item.ans);
+      }
+
+      updateScore();
+    }
+
+    function markAnswers(chosen, correct){
+      $$(".opt", qOpts).forEach(btn=>{
+        const k = btn.dataset.k;
+        btn.classList.remove("correct","wrong");
+        if(k === correct) btn.classList.add("correct");
+        if(k === chosen && chosen !== correct) btn.classList.add("wrong");
+      });
+    }
+
+    function updateScore(){
+      let score = 0;
+      for(let i=0;i<quiz.length;i++){
+        const a = answers.get(i);
+        if(a && a === quiz[i].ans) score++;
+      }
+      scoreNow.textContent = String(score);
+
+      const progress = (answers.size / quiz.length) * 100;
+      barFill.style.width = progress.toFixed(0) + "%";
+    }
+
+    qOpts.addEventListener("click", (e)=>{
+      const btn = e.target.closest(".opt");
+      if(!btn) return;
+
+      const chosen = btn.dataset.k;
+      answers.set(qi, chosen);
+
+      const correct = quiz[qi].ans;
+      markAnswers(chosen, correct);
+
+      if(chosen === correct) toast("Верно ✅");
+      else toast(`Неверно ❌ <span>Правильный: <b>${correct}</b></span>`);
+
+      updateScore();
+    });
+
+    $("#nextQ").addEventListener("click", ()=>{
+      qi = Math.min(quiz.length-1, qi+1);
+      renderQ();
+    });
+    $("#prevQ").addEventListener("click", ()=>{
+      qi = Math.max(0, qi-1);
+      renderQ();
+    });
+    $("#restartQuiz").addEventListener("click", ()=>{
+      answers.clear();
+      qi = 0;
+      renderQ();
+      toast("Тест сброшен");
+    });
+
+    $("#copyScore").addEventListener("click", async ()=>{
+      const score = scoreNow.textContent;
+      const total = scoreTotal.textContent;
+      await copyText(`My Idiom Fun Club score: ${score}/${total}`);
+      toast("Результат <b>скопирован</b>");
+    });
+
+    renderQ();
+
+    // ===== Smooth go buttons =====
+    $$("[data-go]").forEach(el=>{
+      if(el.classList.contains("pill")) return; // nav already
+      el.addEventListener("click", ()=> go(el.dataset.go));
+    });
+
+    // Keyboard: j/k for next/prev question
+    window.addEventListener("keydown", (e)=>{
+      if(document.activeElement && ["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+      if(e.key.toLowerCase() === "j"){ qi = Math.min(quiz.length-1, qi+1); renderQ(); }
+      if(e.key.toLowerCase() === "k"){ qi = Math.max(0, qi-1); renderQ(); }
+    });
+
+    // ===== Tiny intro toast =====
+    setTimeout(()=>{
+      toast(`Повторение: <span>${pastIdioms.slice(0,3).join(" • ")}…</span>`);
+    }, 650);
+  </script>
+</body>
+</html>

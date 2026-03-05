@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IDIOM FUN CLUB — One Page</title>
+  <style>
+    :root{
+      --bg: #f4f0ea;
+      --card: rgba(255,255,255,.78);
+      --card2: rgba(255,255,255,.92);
+      --text: #121212;
+      --muted: rgba(18,18,18,.72);
+      --red: #e3262f;
+      --red2:#b61f27;
+      --line: rgba(18,18,18,.12);
+      --shadow: 0 18px 60px rgba(0,0,0,.12);
+      --shadow2: 0 10px 30px rgba(0,0,0,.10);
+      --radius: 22px;
+      --radius2: 16px;
+      --max: 1100px;
+    }
+    [data-theme="dark"]{
+      --bg: #0f1114;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.10);
+      --text: #f1f2f4;
+      --muted: rgba(241,242,244,.72);
+      --line: rgba(241,242,244,.14);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --shadow2: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      background: radial-gradient(1200px 700px at 15% -10%, rgba(227,38,47,.22), transparent 55%),
+                  radial-gradient(1000px 600px at 95% 0%, rgba(227,38,47,.18), transparent 55%),
+                  radial-gradient(900px 700px at 70% 105%, rgba(227,38,47,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 18px}
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px; border:1px solid var(--line);
+      background:var(--card); border-radius:999px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+    .btn{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(227,38,47,.15), rgba(227,38,47,.06));
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:999px;
+      transition: transform .12s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+      font-weight:600;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(227,38,47,.45)}
+    .btn.red{
+      border-color: rgba(227,38,47,.45);
+      background: linear-gradient(180deg, rgba(227,38,47,.95), rgba(182,31,39,.95));
+      color:#fff;
+      box-shadow: 0 14px 30px rgba(227,38,47,.25);
+    }
+    .btn.red:hover{transform: translateY(-2px)}
+    .btn.ghost{
+      background: transparent;
+    }
+    .chip{
+      display:inline-flex; align-items:center;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--card);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.25));
+      border-bottom: 1px solid var(--line);
+    }
+    [data-theme="dark"] header{
+      background: linear-gradient(180deg, rgba(10,12,14,.72), rgba(10,12,14,.30));
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 0;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:baseline; gap:10px; white-space:nowrap;
+    }
+    .brand .logo{
+      font-weight:900; letter-spacing:.06em;
+      font-size: 16px;
+      padding:8px 10px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(227,38,47,.20), rgba(227,38,47,.08));
+      border:1px solid rgba(227,38,47,.35);
+    }
+    .brand .sub{
+      font-size: 12px; color: var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    nav ul{list-style:none; display:flex; gap:10px; margin:0; padding:0; flex-wrap:wrap; justify-content:flex-end}
+    nav a{
+      text-decoration:none;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid transparent;
+      color: var(--muted);
+      font-weight:650;
+      font-size: 14px;
+      transition: background .2s ease, border-color .2s ease, color .2s ease;
+    }
+    nav a:hover{
+      background: var(--card);
+      border-color: var(--line);
+      color: var(--text);
+    }
+    .nav-right{display:flex; align-items:center; gap:10px}
+
+    /* Hero */
+    .hero{
+      padding: 34px 0 16px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){
+      .hero-grid{grid-template-columns:1fr}
+    }
+    .hero-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.35));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      min-height: 320px;
+    }
+    [data-theme="dark"] .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+    }
+
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-40px -60px auto auto;
+      width: 260px; height: 260px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(227,38,47,.55), rgba(227,38,47,0) 70%);
+      transform: rotate(10deg);
+      filter: blur(0px);
+      pointer-events:none;
+    }
+    .hero-card::after{
+      content:"";
+      position:absolute; inset:auto -40px -60px auto;
+      width: 320px; height: 320px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(227,38,47,.25), rgba(227,38,47,0) 68%);
+      transform: rotate(-8deg);
+      pointer-events:none;
+    }
+
+    .hero-inner{padding: 26px 24px 22px; position:relative}
+    .h1{
+      margin: 8px 0 6px;
+      font-weight: 950;
+      letter-spacing: .01em;
+      font-size: clamp(28px, 4.2vw, 46px);
+      line-height: 1.02;
+    }
+    .h1 .accent{color: var(--red)}
+    .lead{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.5;
+      max-width: 60ch;
+    }
+    .hero-actions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 16px;
+    }
+    .hero-badges{
+      margin-top: 14px;
+      display:flex; flex-wrap:wrap; gap:8px;
+    }
+
+    /* Side card */
+    .side-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .side-top{
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(227,38,47,.16), rgba(227,38,47,.05));
+    }
+    .side-title{
+      margin:0;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing:.03em;
+    }
+    .side-sub{margin:8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.45}
+    .side-body{padding: 14px 18px 18px}
+    .linklist{display:grid; gap:10px}
+    .linkitem{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: var(--card2);
+      text-decoration:none;
+      transition: transform .12s ease, border-color .2s ease;
+    }
+    .linkitem:hover{transform: translateY(-1px); border-color: rgba(227,38,47,.45)}
+    .linkitem .l{
+      display:flex; flex-direction:column; gap:2px;
+    }
+    .linkitem .t{font-weight: 800; font-size: 13px}
+    .linkitem .d{color: var(--muted); font-size: 12px}
+
+    /* Sections */
+    section{padding: 18px 0}
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      padding: 10px 0 8px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing:.02em;
+    }
+    .section-head p{margin:0; color:var(--muted); font-size: 13.5px}
+
+    /* Cards */
+    .panel{
+      border-radius: var(--radius);
+      border:1px solid var(--line);
+      background: var(--card);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .panel-pad{padding: 16px}
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.10));
+    }
+    [data-theme="dark"] .toolbar{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .search{
+      display:flex; align-items:center; gap:10px; flex: 1 1 280px;
+      padding: 10px 12px;
+      border:1px solid var(--line);
+      background: var(--card2);
+      border-radius: 999px;
+    }
+    .search input{
+      width:100%;
+      border:0; outline:0; background:transparent;
+      color:var(--text);
+      font-size: 14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 14px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns: repeat(2, 1fr)} }
+    @media (max-width: 620px){ .grid{grid-template-columns: 1fr} }
+    .card{
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--card2);
+      padding: 14px 14px 12px;
+      transition: transform .12s ease, border-color .2s ease;
+      cursor:pointer;
+      min-height: 108px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .card:hover{transform: translateY(-2px); border-color: rgba(227,38,47,.45)}
+    .card .top{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    }
+    .card .name{
+      margin:0;
+      font-weight: 950;
+      letter-spacing:.01em;
+      font-size: 15px;
+    }
+    .card .meaning{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    /* Quiz */
+    .quiz{
+      display:grid; grid-template-columns: 1fr 1fr; gap:12px;
+    }
+    @media (max-width: 920px){ .quiz{grid-template-columns:1fr} }
+    .qcard{
+      border-radius: 18px;
+      border:1px solid var(--line);
+      background: var(--card2);
+      padding: 14px;
+    }
+    .qtitle{margin:0 0 6px; font-weight: 950; font-size: 15px}
+    .qtext{margin:0 0 10px; color:var(--muted); font-size: 13.5px; line-height:1.45}
+    .opts{display:grid; gap:8px}
+    .opt{
+      border:1px solid var(--line);
+      background: var(--card);
+      border-radius: 14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:650;
+      font-size: 13.5px;
+      transition: transform .12s ease, border-color .2s ease, background .2s ease;
+      user-select:none;
+    }
+    .opt:hover{transform: translateY(-1px); border-color: rgba(227,38,47,.45)}
+    .opt.correct{border-color: rgba(39, 195, 118, .55); background: rgba(39,195,118,.12)}
+    .opt.wrong{border-color: rgba(227,38,47,.55); background: rgba(227,38,47,.10)}
+    .scoreline{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Modal */
+    .modal{
+      position: fixed; inset:0; z-index:80;
+      display:none;
+      background: rgba(0,0,0,.44);
+      padding: 18px;
+    }
+    .modal.show{display:flex; align-items:center; justify-content:center}
+    .modal-card{
+      width:min(760px, 100%);
+      border-radius: 22px;
+      border:1px solid var(--line);
+      background: var(--bg);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modal-head{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(227,38,47,.18), rgba(227,38,47,.05));
+    }
+    .modal-head h3{margin:0; font-weight: 950}
+    .modal-body{padding: 14px 16px 16px}
+    .modal-body p{margin:8px 0; color:var(--muted); line-height:1.55}
+    .ex{
+      padding: 12px 12px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      margin-top: 10px;
+      font-weight: 650;
+    }
+
+    /* Footer */
+    footer{
+      padding: 24px 0 36px;
+      color: var(--muted);
+    }
+    .foot{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+    .tiny{font-size: 12.5px}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      border:1px solid var(--line);
+      background: var(--card);
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <div class="brand">
+          <div class="logo">IDIOMS.COM</div>
+          <div class="sub">IDIOM FUN CLUB</div>
+        </div>
+
+        <nav aria-label="Навигация">
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#idioms">Idioms</a></li>
+            <li><a href="#quiz">Mini Quiz</a></li>
+            <li><a href="#links">Links</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-right">
+          <button class="btn ghost" id="themeBtn" type="button" title="Сменить тему">
+            🌗 Theme
+          </button>
+          <a class="btn red" href="#quiz">Start Quiz</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="home" class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="hero-inner">
+            <div class="pill">
+              <span class="chip">USA vibe</span>
+              <span class="chip">Most useable idioms</span>
+              <span class="chip">One-page</span>
+            </div>
+
+            <h1 class="h1">
+              <span class="accent">IDIOM</span> FUN CLUB<br/>
+              Learn. Play. Speak.
+            </h1>
+
+            <p class="lead">
+              Здесь собраны популярные идиомы + мини-игра на 3 вопроса.
+              Нажми на карточку идиомы — увидишь перевод и пример.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn red" href="#idioms">Open Idioms</a>
+              <button class="btn" id="randomBtn" type="button">🎲 Random Idiom</button>
+              <button class="btn" id="copyBtn" type="button">📋 Copy site link</button>
+            </div>
+
+            <div class="hero-badges">
+              <span class="chip">Tip: поиск работает мгновенно</span>
+              <span class="chip">Tip: <span class="kbd">Esc</span> закрывает окно</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="side-card" id="links">
+          <div class="side-top">
+            <p class="side-title">Activities & Links</p>
+            <p class="side-sub">
+              Быстрые переходы на интерактивы (можешь заменить на свои ссылки).
+            </p>
+          </div>
+          <div class="side-body">
+            <div class="linklist">
+              <a class="linkitem" href="https://view.genially.com/5b46f36cd5de275f9f01301b/interactive-content-adventure-breakout" target="_blank" rel="noreferrer">
+                <div class="l">
+                  <div class="t">Ice-breaking (Genially)</div>
+                  <div class="d">Интерактивная активность</div>
+                </div>
+                <div aria-hidden="true">↗</div>
+              </a>
+
+              <a class="linkitem" href="https://www.gimkit.com/me" target="_blank" rel="noreferrer">
+                <div class="l">
+                  <div class="t">Mini Game (Gimkit)</div>
+                  <div class="d">Игра/викторина</div>
+                </div>
+                <div aria-hidden="true">↗</div>
+              </a>
+
+              <a class="linkitem" href="#quiz">
+                <div class="l">
+                  <div class="t">Mini Quiz (на сайте)</div>
+                  <div class="d">3 вопроса — проверь себя</div>
+                </div>
+                <div aria-hidden="true">→</div>
+              </a>
+
+              <a class="linkitem" href="#footer">
+                <div class="l">
+                  <div class="t">Feedback</div>
+                  <div class="d">Идеи и улучшения</div>
+                </div>
+                <div aria-hidden="true">→</div>
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <section id="idioms">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Idioms Library</h2>
+          <p>Нажми карточку → перевод + пример.</p>
+        </div>
+        <div class="pill" style="gap:8px;">
+          <span class="chip" id="countChip">0 idioms</span>
+          <button class="btn" id="resetSearch" type="button">Reset</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="toolbar">
+          <div class="search" role="search">
+            🔎
+            <input id="searchInput" type="text" placeholder="Поиск: hit the books / blue moon / flow..." autocomplete="off" />
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button class="btn" id="sortBtn" type="button">↕ Sort A→Z</button>
+            <button class="btn" id="showAllBtn" type="button">👀 Show all</button>
+          </div>
+        </div>
+
+        <div class="grid" id="cards"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Mini Quiz (3 questions)</h2>
+          <p>Выбери правильное значение идиомы.</p>
+        </div>
+        <div class="pill" style="gap:8px;">
+          <span class="chip" id="scoreChip">Score: 0/3</span>
+          <button class="btn red" id="restartQuiz" type="button">Restart</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-pad">
+          <div class="quiz" id="quizWrap"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer">
+    <div class="container">
+      <div class="foot">
+        <div class="tiny">
+          © <span id="year"></span> IDIOM FUN CLUB • Сделано в 1 файле (HTML+CSS+JS).
+        </div>
+        <div class="tiny">
+          Быстрые клавиши: <span class="kbd">/</span> поиск • <span class="kbd">Esc</span> закрыть окно
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <div class="modal-head">
+        <h3 id="mTitle">Idiom</h3>
+        <button class="btn" id="closeModal" type="button">✕ Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="chip" id="mTag">Meaning</div>
+        <p id="mMeaning"></p>
+        <div class="ex" id="mExample"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== Data (на основе PDF) =====
+    const IDIOMS = [
+      {name:"Hit the books", meaning:"усердно учиться", example:"I need to hit the books tonight."},
+      {name:"Over the moon", meaning:"быть очень счастливым", example:"I was over the moon when I passed the test."},
+      {name:"Under the weather", meaning:"плохо себя чувствовать", example:"I feel under the weather today."},
+      {name:"Once in a blue moon", meaning:"очень редко", example:"We eat fast food once in a blue moon."},
+      {name:"In hot water", meaning:"в неприятностях", example:"He was in hot water for being late."},
+      {name:"Butterflies in one's stomach", meaning:"сильно волноваться", example:"I had butterflies in my stomach before the exam."},
+      {name:"On the same page", meaning:"быть на одной волне, одинаково понимать", example:"We are on the same page about the project."},
+      {name:"Snowed under", meaning:"завален делами/учёбой", example:"I am snowed under with homework."},
+      {name:"Blow off steam", meaning:"выпустить пар, снять стресс", example:"He plays football to blow off steam."},
+      {name:"Cost an arm and a leg", meaning:"очень дорого стоить", example:"That phone costs an arm and a leg."},
+      {name:"Feel blue", meaning:"грустить", example:"She feels blue on rainy days."},
+      {name:"A light bulb moment", meaning:"внезапное понимание", example:"It was a light bulb moment when I understood the rule."},
+
+      {name:"Call it a day", meaning:"закончить на сегодня", example:"Let’s call it a day — we’ll continue tomorrow."},
+      {name:"Down to earth", meaning:"простой и практичный", example:"She’s very down to earth."},
+      {name:"Back on track", meaning:"вернуться к плану/правильному пути", example:"After a break, we got back on track."},
+      {name:"Go with the flow", meaning:"плыть по течению, не сопротивляться", example:"Just go with the flow — it’ll be fine."},
+      {name:"Out of the blue", meaning:"неожиданно", example:"He called me out of the blue."},
+      {name:"Pull yourself together", meaning:"взять себя в руки", example:"Pull yourself together — you can do this."},
+      {name:"A blessing in disguise", meaning:"неприятность, которая потом принесла пользу", example:"Failing that test was a blessing in disguise."},
+      {name:"Feel under pressure", meaning:"чувствовать давление/стресс", example:"I feel under pressure before exams."}
+    ];
+
+    // ===== Helpers =====
+    const $ = (s, el=document) => el.querySelector(s);
+    const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+
+    // ===== Theme =====
+    const themeBtn = $("#themeBtn");
+    const savedTheme = localStorage.getItem("ifc_theme");
+    if(savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+
+    themeBtn.addEventListener("click", () => {
+      const cur = document.documentElement.getAttribute("data-theme") || "light";
+      const next = cur === "dark" ? "light" : "dark";
+      if(next === "light") document.documentElement.removeAttribute("data-theme");
+      else document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("ifc_theme", next);
+    });
+
+    // ===== Header smooth scroll =====
+    $$('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click", (e)=>{
+        const id = a.getAttribute("href");
+        if(id.length > 1){
+          const target = document.querySelector(id);
+          if(target){
+            e.preventDefault();
+            target.scrollIntoView({behavior:"smooth", block:"start"});
+          }
+        }
+      });
+    });
+
+    // ===== Cards render + search/sort =====
+    const cardsEl = $("#cards");
+    const searchInput = $("#searchInput");
+    const countChip = $("#countChip");
+    const resetSearch = $("#resetSearch");
+    const sortBtn = $("#sortBtn");
+    const showAllBtn = $("#showAllBtn");
+
+    let sortAZ = false;
+    let filtered = [...IDIOMS];
+
+    function renderCards(list){
+      cardsEl.innerHTML = "";
+      list.forEach((item, idx)=>{
+        const el = document.createElement("div");
+        el.className = "card";
+        el.tabIndex = 0;
+        el.innerHTML = `
+          <div class="top">
+            <h3 class="name">${escapeHtml(item.name)}</h3>
+            <span class="chip">#${idx+1}</span>
+          </div>
+          <p class="meaning">${escapeHtml(item.meaning)}</p>
+        `;
+        el.addEventListener("click", ()=> openModal(item));
+        el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") openModal(item); });
+        cardsEl.appendChild(el);
+      });
+      countChip.textContent = `${list.length} idioms`;
+    }
+
+    function applyFilter(){
+      const q = (searchInput.value || "").trim().toLowerCase();
+      filtered = IDIOMS.filter(x => {
+        const hay = (x.name + " " + x.meaning + " " + x.example).toLowerCase();
+        return hay.includes(q);
+      });
+      let out = [...filtered];
+      if(sortAZ){
+        out.sort((a,b)=> a.name.localeCompare(b.name));
+      }
+      renderCards(out);
+    }
+
+    searchInput.addEventListener("input", applyFilter);
+
+    resetSearch.addEventListener("click", ()=>{
+      searchInput.value = "";
+      sortAZ = false;
+      sortBtn.textContent = "↕ Sort A→Z";
+      applyFilter();
+    });
+
+    sortBtn.addEventListener("click", ()=>{
+      sortAZ = !sortAZ;
+      sortBtn.textContent = sortAZ ? "↕ Sort Z→A" : "↕ Sort A→Z";
+      applyFilter();
+    });
+
+    showAllBtn.addEventListener("click", ()=>{
+      searchInput.value = "";
+      applyFilter();
+      document.querySelector("#idioms").scrollIntoView({behavior:"smooth"});
+    });
+
+    // Keyboard shortcut: "/" focuses search
+    document.addEventListener("keydown", (e)=>{
+      if(e.key === "/" && document.activeElement !== searchInput){
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    // ===== Modal =====
+    const modal = $("#modal");
+    const closeModalBtn = $("#closeModal");
+    const mTitle = $("#mTitle");
+    const mMeaning = $("#mMeaning");
+    const mExample = $("#mExample");
+    const mTag = $("#mTag");
+
+    function openModal(item){
+      mTitle.textContent = item.name;
+      mMeaning.textContent = item.meaning;
+      mExample.textContent = "Example: " + item.example;
+      mTag.textContent = "Meaning";
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden", "false");
+      closeModalBtn.focus();
+    }
+    function closeModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+    }
+    closeModalBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e)=>{
+      if(e.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
+    });
+
+    // ===== Random idiom =====
+    $("#randomBtn").addEventListener("click", ()=>{
+      const item = IDIOMS[Math.floor(Math.random()*IDIOMS.length)];
+      openModal(item);
+    });
+
+    // ===== Copy "site link" (works for hosted page; locally will copy file path if browser allows) =====
+    $("#copyBtn").addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(location.href);
+        toast("Ссылка скопирована!");
+      }catch{
+        toast("Не получилось скопировать (браузер запретил).");
+      }
+    });
+
+    // ===== Quiz (3 Q) =====
+    const quizWrap = $("#quizWrap");
+    const scoreChip = $("#scoreChip");
+    const restartQuiz = $("#restartQuiz");
+    let score = 0;
+
+    function buildQuiz(){
+      score = 0;
+      scoreChip.textContent = "Score: 0/3";
+      quizWrap.innerHTML = "";
+
+      const picks = pickUnique(IDIOMS, 3);
+
+      picks.forEach((item, qi)=>{
+        const wrong = pickUnique(IDIOMS.filter(x=>x.name!==item.name), 2).map(x=>x.meaning);
+        const answers = shuffle([item.meaning, ...wrong]);
+
+        const q = document.createElement("div");
+        q.className = "qcard";
+        q.innerHTML = `
+          <p class="qtitle">Q${qi+1}. Что значит: <span style="color:var(--red); font-weight:950;">${escapeHtml(item.name)}</span> ?</p>
+          <p class="qtext">Выбери правильный вариант.</p>
+          <div class="opts"></div>
+          <div class="scoreline">
+            <span class="chip">Tip: думай по смыслу</span>
+            <span class="chip" data-status>Not answered</span>
+          </div>
+        `;
+        const opts = $(".opts", q);
+        const status = $('[data-status]', q);
+
+        let locked = false;
+        answers.forEach(ans=>{
+          const b = document.createElement("div");
+          b.className = "opt";
+          b.textContent = ans;
+          b.addEventListener("click", ()=>{
+            if(locked) return;
+            locked = true;
+            if(ans === item.meaning){
+              b.classList.add("correct");
+              score++;
+              status.textContent = "Correct ✅";
+            }else{
+              b.classList.add("wrong");
+              status.textContent = "Wrong ❌";
+              // mark correct
+              [...opts.children].forEach(el=>{
+                if(el.textContent === item.meaning) el.classList.add("correct");
+              });
+            }
+            scoreChip.textContent = `Score: ${score}/3`;
+          });
+          opts.appendChild(b);
+        });
+
+        quizWrap.appendChild(q);
+      });
+    }
+
+    restartQuiz.addEventListener("click", buildQuiz);
+
+    // ===== Tiny toast =====
+    function toast(text){
+      const t = document.createElement("div");
+      t.textContent = text;
+      t.style.position = "fixed";
+      t.style.left = "50%";
+      t.style.bottom = "18px";
+      t.style.transform = "translateX(-50%)";
+      t.style.zIndex = "200";
+      t.style.padding = "10px 14px";
+      t.style.borderRadius = "999px";
+      t.style.border = "1px solid var(--line)";
+      t.style.background = "var(--card2)";
+      t.style.boxShadow = "var(--shadow2)";
+      t.style.color = "var(--text)";
+      t.style.fontWeight = "700";
+      document.body.appendChild(t);
+      setTimeout(()=>{ t.style.opacity = "0"; t.style.transition="opacity .25s ease"; }, 1200);
+      setTimeout(()=> t.remove(), 1550);
+    }
+
+    // ===== Utils =====
+    function pickUnique(arr, n){
+      const copy = [...arr];
+      const out = [];
+      while(out.length < n && copy.length){
+        const i = Math.floor(Math.random()*copy.length);
+        out.push(copy.splice(i,1)[0]);
+      }
+      return out;
+    }
+    function shuffle(arr){
+      const a = [...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // ===== Init =====
+    $("#year").textContent = new Date().getFullYear();
+    renderCards(IDIOMS);
+    buildQuiz();
+    applyFilter();
+  </script>
+</body>
+</html>

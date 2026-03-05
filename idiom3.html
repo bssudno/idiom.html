@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Idiom Fun Club — Emotions & Idioms Feelings</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#0f1a2f;
+      --card2:#0c1730;
+      --txt:#eaf0ff;
+      --muted:#a9b6d6;
+      --accent:#63b3ff;
+      --accent2:#ffd166;
+      --danger:#ff5b6e;
+      --ok:#38d39f;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1100px 700px at 15% 10%, rgba(99,179,255,.20), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(255,209,102,.16), transparent 55%),
+                  radial-gradient(900px 600px at 50% 100%, rgba(56,211,159,.10), transparent 55%),
+                  var(--bg);
+      color:var(--txt);
+    }
+
+    a{color:inherit}
+    .container{width:min(1100px, 92%); margin:0 auto}
+
+    /* Topbar */
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.6);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 0;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      text-decoration:none;
+      min-width: 210px;
+    }
+    .logo{
+      width:40px; height:40px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(99,179,255,.95), rgba(255,209,102,.9));
+      display:grid; place-items:center;
+      font-weight:800; color:#0b1220;
+      box-shadow: 0 10px 25px rgba(99,179,255,.20);
+      letter-spacing:.5px;
+    }
+    .brand b{display:block; font-size:14px; line-height:1}
+    .brand small{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+
+    nav{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    nav a{
+      text-decoration:none;
+      padding:9px 11px;
+      border-radius: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.03);
+      transition: .2s ease;
+      font-size: 13px;
+    }
+    nav a:hover{color:var(--txt); transform: translateY(-1px); border-color: rgba(99,179,255,.35)}
+    nav a.active{color:var(--txt); border-color: rgba(99,179,255,.55); background: rgba(99,179,255,.12)}
+
+    .rightTools{
+      display:flex; gap:10px; align-items:center;
+    }
+
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight:700;
+      color: #061025;
+      background: linear-gradient(135deg, rgba(99,179,255,1), rgba(255,209,102,1));
+      box-shadow: 0 14px 35px rgba(0,0,0,.30);
+      transition:.2s ease;
+      font-size: 13px;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn:active{transform: translateY(0)}
+    .btnGhost{
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow:none;
+    }
+    .btnGhost:hover{border-color: rgba(255,209,102,.45)}
+    .search{
+      width: 220px;
+      max-width: 34vw;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--txt);
+      border-radius: 14px;
+      padding: 10px 12px;
+      outline: none;
+      font-size: 13px;
+    }
+    .search::placeholder{color: rgba(233,240,255,.55)}
+    @media (max-width: 860px){
+      .search{display:none}
+      nav{display:none}
+      .topbar{flex-wrap:wrap}
+      .mobileNav{display:flex}
+    }
+
+    /* Sections */
+    section{padding: 34px 0}
+    .hero{
+      padding-top: 28px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr .85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns: 1fr} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .cardPad{padding: 18px}
+
+    .tagRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(99,179,255,.12);
+      border: 1px solid rgba(99,179,255,.25);
+      color: var(--txt);
+      font-weight:700;
+      font-size: 12px;
+    }
+    .tag .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(99,179,255,.15);
+    }
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(34px, 4.5vw, 56px);
+      line-height: .95;
+      letter-spacing: .5px;
+    }
+    .subtitle{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 60ch;
+    }
+    .heroActions{display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px}
+    .miniBtn{
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color: var(--txt);
+      cursor:pointer;
+      font-weight: 800;
+      transition: .2s ease;
+    }
+    .miniBtn:hover{transform: translateY(-1px); border-color: rgba(56,211,159,.45)}
+    .miniBtn.danger:hover{border-color: rgba(255,91,110,.55)}
+    .miniBtn:active{transform: translateY(0)}
+
+    .heroSide{
+      display:flex; flex-direction:column; gap:12px;
+      height: 100%;
+    }
+    .poster{
+      position:relative;
+      min-height: 260px;
+      display:grid;
+      place-items:center;
+      padding: 18px;
+      background:
+        radial-gradient(500px 280px at 35% 35%, rgba(99,179,255,.22), transparent 60%),
+        radial-gradient(500px 280px at 75% 45%, rgba(255,209,102,.20), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+    .posterBig{
+      font-size: clamp(26px, 3.2vw, 40px);
+      font-weight: 1000;
+      letter-spacing: 2px;
+      text-align:center;
+      text-transform: uppercase;
+    }
+    .posterBig span{display:block}
+    .posterHint{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+
+    .twoCols{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 700px){ .twoCols{grid-template-columns:1fr} }
+
+    .blockTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+    .blockTitle h2{margin:0; font-size: 16px; letter-spacing:.5px}
+    .badge{
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--txt);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Past idioms */
+    .list{
+      margin:0; padding: 12px 18px 18px;
+      display:grid; gap:10px;
+    }
+    .li{
+      display:flex; gap:10px; align-items:center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .li .num{
+      width:28px; height:28px; border-radius: 10px;
+      display:grid; place-items:center;
+      font-weight: 1000;
+      color:#071028;
+      background: linear-gradient(135deg, rgba(56,211,159,1), rgba(99,179,255,1));
+    }
+    .li span{color: var(--txt); font-weight: 750}
+    .li small{color: var(--muted); font-weight:600}
+
+    /* Idiom cards */
+    .idiomsWrap{padding: 14px 18px 18px}
+    .idiomsTools{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+      margin-bottom: 12px;
+    }
+    .chips{display:flex; gap:8px; flex-wrap:wrap}
+    .chip{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor:pointer;
+      transition:.15s ease;
+      user-select:none;
+    }
+    .chip.active{color: var(--txt); border-color: rgba(99,179,255,.55); background: rgba(99,179,255,.12)}
+    .chip:hover{transform: translateY(-1px); color: var(--txt)}
+    .idiomsGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){ .idiomsGrid{grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 620px){ .idiomsGrid{grid-template-columns: 1fr;} }
+
+    .idiomCard{
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      transition: .2s ease;
+      position: relative;
+      overflow:hidden;
+      min-height: 135px;
+    }
+    .idiomCard:hover{
+      transform: translateY(-2px);
+      border-color: rgba(99,179,255,.35);
+    }
+    .idiomTop{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      margin-bottom: 8px;
+    }
+    .idiomTitle{
+      margin:0;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .pillType{
+      font-size: 11px;
+      font-weight: 1000;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      flex: 0 0 auto;
+    }
+    .idiomDesc{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .ru{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(233,240,255,.85);
+      border-left: 3px solid rgba(255,209,102,.8);
+      padding-left: 10px;
+      font-weight: 700;
+    }
+
+    /* Links blocks */
+    .linkBlock{
+      padding: 14px 18px 18px;
+      display:grid;
+      gap: 10px;
+    }
+    .linkCard{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      text-decoration:none;
+      transition: .18s ease;
+    }
+    .linkCard:hover{transform: translateY(-1px); border-color: rgba(255,209,102,.45)}
+    .linkLeft{
+      display:flex; align-items:center; gap:10px;
+    }
+    .icon{
+      width:34px; height:34px; border-radius: 12px;
+      display:grid; place-items:center;
+      font-weight: 1000;
+      color:#071028;
+      background: linear-gradient(135deg, rgba(255,209,102,1), rgba(99,179,255,1));
+    }
+    .linkText b{display:block; font-size: 13px}
+    .linkText small{display:block; color: var(--muted); font-size: 12px; margin-top:2px}
+    .arrow{
+      opacity:.75;
+      font-weight:1000;
+    }
+
+    /* Footer */
+    footer{
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      background: rgba(15,26,47,.92);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--txt);
+      padding: 10px 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      display:none;
+      z-index: 99;
+      max-width: min(560px, 92%);
+    }
+    .toast.show{display:block; animation: pop .18s ease}
+    @keyframes pop{
+      from{transform: translateX(-50%) translateY(8px); opacity:.1}
+      to{transform: translateX(-50%) translateY(0); opacity:1}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container topbar">
+      <a class="brand" href="#home">
+        <div class="logo">IFC</div>
+        <div>
+          <b>Idiom Fun Club</b>
+          <small>Emotions & Idioms Feelings</small>
+        </div>
+      </a>
+
+      <nav id="nav">
+        <a href="#past">Past idioms</a>
+        <a href="#ice">Ice-breaking</a>
+        <a href="#idioms">Idioms</a>
+        <a href="#mini">Mini game</a>
+        <a href="#feedback">Feedback</a>
+      </nav>
+
+      <div class="rightTools">
+        <input id="search" class="search" type="text" placeholder="Search idioms..." />
+        <button class="btn btnGhost" id="copyLinksBtn" type="button">Copy links</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="grid">
+        <div class="card cardPad">
+          <div class="tagRow">
+            <div class="tag"><span class="dot"></span>Idiom fun club</div>
+            <div class="tag" style="background:rgba(255,209,102,.10);border-color:rgba(255,209,102,.25)">
+              <span class="dot" style="background:var(--accent2);box-shadow:0 0 0 4px rgba(255,209,102,.14)"></span>
+              Lesson 6
+            </div>
+          </div>
+
+          <h1>EMOTIONS &<br>IDIOMS<br>FEELINGS</h1>
+          <p class="subtitle">
+            One-page lesson: past idioms, warm-up links, new idioms with translations, mini game, and feedback.
+            (Based on your PDF slides.) 
+          </p>
+
+          <div class="heroActions">
+            <a class="btn" href="#idioms">Start learning</a>
+            <button class="miniBtn" id="shuffleBtn" type="button">Shuffle idioms</button>
+            <button class="miniBtn danger" id="quizBtn" type="button">Quick quiz</button>
+          </div>
+
+          <p class="subtitle" style="margin-top:12px">
+            From the slide “EMOTIONS & IDIOMS FEELINGS”. :contentReference[oaicite:1]{index=1}
+          </p>
+        </div>
+
+        <div class="heroSide">
+          <div class="card poster">
+            <div>
+              <div class="posterBig">
+                <span>Feelings</span>
+                <span style="opacity:.8">+ Idioms</span>
+              </div>
+              <div class="posterHint">
+                Tip: use the search box to filter idioms.
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="blockTitle">
+              <h2>Quick links</h2>
+              <span class="badge">From slides</span>
+            </div>
+            <div class="linkBlock">
+              <a class="linkCard" id="geniallyLink" target="_blank" rel="noopener">
+                <div class="linkLeft">
+                  <div class="icon">G</div>
+                  <div class="linkText">
+                    <b>Ice-breaking (Genially)</b>
+                    <small>Open warm-up activity</small>
+                  </div>
+                </div>
+                <div class="arrow">↗</div>
+              </a>
+
+              <a class="linkCard" id="gimkitLink" target="_blank" rel="noopener">
+                <div class="linkLeft">
+                  <div class="icon">🎮</div>
+                  <div class="linkText">
+                    <b>Mini game (Gimkit)</b>
+                    <small>Join code from slides</small>
+                  </div>
+                </div>
+                <div class="arrow">↗</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAST IDIOMS -->
+    <section id="past">
+      <div class="card">
+        <div class="blockTitle">
+          <h2>PAST IDIOMS</h2>
+          <span class="badge">Review</span>
+        </div>
+
+        <div class="twoCols">
+          <div>
+            <ol class="list" id="pastList">
+              <!-- filled by JS -->
+            </ol>
+          </div>
+
+          <div class="cardPad">
+            <p class="subtitle" style="margin:0 0 10px">
+              Past idioms list from slide 2. :contentReference[oaicite:2]{index=2}
+            </p>
+            <p class="subtitle" style="margin:0">
+              Click any item to copy it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ICE-BREAKING -->
+    <section id="ice">
+      <div class="card">
+        <div class="blockTitle">
+          <h2>Ice-breaking</h2>
+          <span class="badge">Warm-up</span>
+        </div>
+
+        <div class="cardPad">
+          <p class="subtitle" style="margin-top:0">
+            Open the Genially activity from slide 3. :contentReference[oaicite:3]{index=3}
+          </p>
+          <div class="heroActions">
+            <a class="btn btnGhost" id="openGeniallyBtn" target="_blank" rel="noopener">Open Genially</a>
+            <button class="miniBtn" id="copyGeniallyBtn" type="button">Copy Genially link</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IDIOMS -->
+    <section id="idioms">
+      <div class="card">
+        <div class="blockTitle">
+          <h2>IDIOMS</h2>
+          <span class="badge">New set</span>
+        </div>
+
+        <div class="idiomsWrap">
+          <div class="idiomsTools">
+            <div class="chips" id="chips">
+              <div class="chip active" data-filter="all">All</div>
+              <div class="chip" data-filter="positive">Positive</div>
+              <div class="chip" data-filter="negative">Negative</div>
+              <div class="chip" data-filter="anger">Anger/Stress</div>
+            </div>
+
+            <div class="heroActions" style="margin:0">
+              <button class="miniBtn" id="resetBtn" type="button">Reset</button>
+            </div>
+          </div>
+
+          <div class="idiomsGrid" id="idiomsGrid">
+            <!-- filled by JS -->
+          </div>
+
+          <p class="subtitle" style="margin:12px 0 0">
+            Idioms + Russian meanings are taken from slides 5–6. :contentReference[oaicite:4]{index=4}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINI GAME -->
+    <section id="mini">
+      <div class="card">
+        <div class="blockTitle">
+          <h2>Mini game</h2>
+          <span class="badge">Play</span>
+        </div>
+
+        <div class="cardPad">
+          <p class="subtitle" style="margin-top:0">
+            Join the Gimkit game (slide 7). :contentReference[oaicite:5]{index=5}
+          </p>
+
+          <div class="heroActions">
+            <a class="btn" id="openGimkitBtn" target="_blank" rel="noopener">Open Gimkit</a>
+            <button class="miniBtn" id="copyGimkitBtn" type="button">Copy Gimkit link</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEEDBACK -->
+    <section id="feedback">
+      <div class="card">
+        <div class="blockTitle">
+          <h2>Feedback</h2>
+          <span class="badge">@IdiomReview_Bot</span>
+        </div>
+
+        <div class="twoCols">
+          <div class="cardPad">
+            <p class="subtitle" style="margin-top:0">
+              Leave feedback using <b>@IdiomReview_Bot</b> (slide 8). :contentReference[oaicite:6]{index=6}
+            </p>
+
+            <div class="heroActions">
+              <button class="miniBtn" id="copyBotBtn" type="button">Copy @IdiomReview_Bot</button>
+              <button class="miniBtn" id="copyAllIdiomsBtn" type="button">Copy all idioms</button>
+            </div>
+
+            <hr style="border:none;border-top:1px solid rgba(255,255,255,.08); margin:16px 0">
+
+            <p class="subtitle" style="margin:0 0 8px">
+              WhatsApp group (slide 9 shows a QR). :contentReference[oaicite:7]{index=7}
+            </p>
+
+            <!-- ВСТАВЬ СЮДА СВОЮ ССЫЛКУ НА WHATSAPP ГРУППУ, ЕСЛИ ЕСТЬ -->
+            <a class="btn btnGhost" id="whatsBtn" href="#" target="_blank" rel="noopener">Open WhatsApp group</a>
+            <p class="subtitle" style="margin:10px 0 0">
+              Если у тебя есть ссылка на группу WhatsApp — вставь её в код (переменная <code>WHATSAPP_GROUP</code> внизу).
+            </p>
+          </div>
+
+          <div class="cardPad">
+            <p class="subtitle" style="margin-top:0">
+              Quick “Mood check”:
+            </p>
+
+            <div class="twoCols">
+              <button class="miniBtn" data-mood="I feel blue">😢 I feel blue</button>
+              <button class="miniBtn" data-mood="I'm over the moon">🌙 Over the moon</button>
+              <button class="miniBtn" data-mood="I'm on edge">😠 On edge</button>
+              <button class="miniBtn" data-mood="I'm down in the dumps">🫥 Down in the dumps</button>
+            </div>
+
+            <p class="subtitle" style="margin:12px 0 0">
+              Click a mood to copy it.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="container">
+      Built from the “Idiom Fun Club 6” PDF slides. :contentReference[oaicite:8]{index=8}
+    </footer>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ========= DATA FROM PDF (summary) =========
+       - Past idioms list: slide 2
+       - Ice-breaking Genially link: slide 3
+       - Idioms with RU meanings: slides 5-6
+       - Mini game Gimkit link: slides 3 & 7
+       - Feedback: slide 8
+       - WhatsApp: slide 9 (QR shown, link not printed)
+       Sources: :contentReference[oaicite:9]{index=9}
+    ========================================== */
+
+    // Links from the PDF text
+    const GENIALLY =
+      "https://view.genially.com/69748e5e413911b3de740e52/interactive-content-new-sense";
+    const GIMKIT =
+      "https://www.gimkit.com/join?gc=268972";
+
+    // If you have WhatsApp group link, paste it here:
+    const WHATSAPP_GROUP = ""; // e.g. "https://chat.whatsapp.com/XXXXXX"
+
+    const pastIdioms = [
+      "A light-bulb moment",
+      "To push someone’s buttons",
+      "To be on the same wavelength",
+      "Once in a blue moon",
+      "Bite your tongue",
+      "Take your time",
+      "Cold as ice",
+      "Snowed under"
+    ];
+
+    // Idioms shown on slides 5-6 (EN + RU meanings)
+    const idioms = [
+      {
+        en: "on edge",
+        ru: "на взводе, нервным, легко раздражающимся",
+        tag: "anger"
+      },
+      {
+        en: "butterflies in one’s stomach",
+        ru: "сильное волнение, нервозность (часто перед важным событием)",
+        tag: "anger"
+      },
+      {
+        en: "blow off steam",
+        ru: "выпустить пар, снять эмоциональное напряжение",
+        tag: "anger"
+      },
+      {
+        en: "feel blue",
+        ru: "грустить, быть в унынии",
+        tag: "negative"
+      },
+      {
+        en: "lose one’s temper",
+        ru: "потерять самообладание, разозлиться",
+        tag: "anger"
+      },
+      {
+        en: "down in the dumps",
+        ru: "в плохом настроении, подавленным",
+        tag: "negative"
+      },
+      {
+        en: "over the moon",
+        ru: "быть очень счастливым, на седьмом небе от счастья",
+        tag: "positive"
+      },
+      {
+        en: "be fed up (with something)",
+        ru: "быть по горло сытым, очень раздражённым чем-то",
+        tag: "negative"
+      }
+    ];
+
+    /* ===== Helpers ===== */
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    const toast = $("#toast");
+    let toastTimer = null;
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.classList.remove("show"), 1600);
+    }
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast("Copied ✅");
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast("Copied ✅");
+      }
+    }
+
+    function safeShort(url){
+      try{
+        const u = new URL(url);
+        return u.hostname + u.pathname;
+      }catch{ return url; }
+    }
+
+    /* ===== Render Past ===== */
+    function renderPast(){
+      const list = $("#pastList");
+      list.innerHTML = "";
+      pastIdioms.forEach((t, i)=>{
+        const li = document.createElement("li");
+        li.className = "li";
+        li.innerHTML = `
+          <div class="num">${i+1}</div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span>${t}</span>
+            <small>Click to copy</small>
+          </div>
+        `;
+        li.addEventListener("click", ()=>copyText(t));
+        list.appendChild(li);
+      });
+    }
+
+    /* ===== Render Idioms ===== */
+    function renderIdioms(list){
+      const grid = $("#idiomsGrid");
+      grid.innerHTML = "";
+      list.forEach(item=>{
+        const card = document.createElement("div");
+        card.className = "idiomCard";
+        const typeLabel =
+          item.tag === "positive" ? "Positive" :
+          item.tag === "anger" ? "Anger/Stress" :
+          "Negative";
+        card.innerHTML = `
+          <div class="idiomTop">
+            <h3 class="idiomTitle">${item.en}</h3>
+            <span class="pillType">${typeLabel}</span>
+          </div>
+          <p class="idiomDesc">Click card to copy idiom.</p>
+          <div class="ru">${item.ru}</div>
+        `;
+        card.addEventListener("click", ()=>copyText(item.en));
+        grid.appendChild(card);
+      });
+    }
+
+    function applyFilter(filter){
+      $$("#chips .chip").forEach(c=>c.classList.remove("active"));
+      $(`#chips .chip[data-filter="${filter}"]`)?.classList.add("active");
+
+      if(filter === "all"){
+        renderIdioms(filterBySearch(idioms));
+        return;
+      }
+      const filtered = idioms.filter(x=>x.tag === filter);
+      renderIdioms(filterBySearch(filtered));
+    }
+
+    function filterBySearch(list){
+      const q = ($("#search").value || "").trim().toLowerCase();
+      if(!q) return list;
+      return list.filter(x =>
+        x.en.toLowerCase().includes(q) || x.ru.toLowerCase().includes(q)
+      );
+    }
+
+    /* ===== Quiz ===== */
+    function startQuickQuiz(){
+      const pick = idioms[Math.floor(Math.random()*idioms.length)];
+      const options = idioms
+        .filter(x=>x.en !== pick.en)
+        .sort(()=>Math.random()-0.5)
+        .slice(0,3)
+        .concat([pick])
+        .sort(()=>Math.random()-0.5);
+
+      const question = `What matches: "${pick.ru}" ?`;
+      const answer = prompt(
+        question + "\n\n" + options.map((o, i)=>`${i+1}) ${o.en}`).join("\n")
+        + "\n\nType 1-4"
+      );
+
+      if(!answer) return;
+
+      const idx = Number(answer) - 1;
+      if(Number.isNaN(idx) || idx < 0 || idx > 3){
+        showToast("Type 1-4 🙂");
+        return;
+      }
+      if(options[idx].en === pick.en){
+        showToast("Correct 🎉");
+      }else{
+        showToast(`Oops 🙂 Correct: ${pick.en}`);
+      }
+    }
+
+    /* ===== Active nav highlight ===== */
+    const sections = ["home","past","ice","idioms","mini","feedback"].map(id=>document.getElementById(id));
+    function onScroll(){
+      const y = window.scrollY + 120;
+      let current = "home";
+      for(const s of sections){
+        if(s.offsetTop <= y) current = s.id;
+      }
+      $$("#nav a").forEach(a=>{
+        const href = (a.getAttribute("href") || "").replace("#","");
+        a.classList.toggle("active", href === current);
+      });
+    }
+
+    /* ===== Init ===== */
+    function init(){
+      // set links
+      $("#geniallyLink").href = GENIALLY;
+      $("#gimkitLink").href = GIMKIT;
+      $("#openGeniallyBtn").href = GENIALLY;
+      $("#openGimkitBtn").href = GIMKIT;
+
+      $("#copyGeniallyBtn").addEventListener("click", ()=>copyText(GENIALLY));
+      $("#copyGimkitBtn").addEventListener("click", ()=>copyText(GIMKIT));
+
+      $("#copyLinksBtn").addEventListener("click", ()=>{
+        const text = `Genially: ${GENIALLY}\nGimkit: ${GIMKIT}`;
+        copyText(text);
+      });
+
+      $("#shuffleBtn").addEventListener("click", ()=>{
+        const shuffled = [...idioms].sort(()=>Math.random()-0.5);
+        renderIdioms(filterBySearch(shuffled));
+        showToast("Shuffled ✅");
+      });
+
+      $("#quizBtn").addEventListener("click", startQuickQuiz);
+
+      $("#resetBtn").addEventListener("click", ()=>{
+        $("#search").value = "";
+        applyFilter("all");
+        showToast("Reset ✅");
+      });
+
+      // chips
+      $$("#chips .chip").forEach(ch=>{
+        ch.addEventListener("click", ()=>applyFilter(ch.dataset.filter));
+      });
+
+      // search
+      $("#search").addEventListener("input", ()=>{
+        const active = $("#chips .chip.active")?.dataset.filter || "all";
+        applyFilter(active);
+      });
+
+      // bot copy
+      $("#copyBotBtn").addEventListener("click", ()=>copyText("@IdiomReview_Bot"));
+      $("#copyAllIdiomsBtn").addEventListener("click", ()=>{
+        const text = idioms.map(x=>`${x.en} — ${x.ru}`).join("\n");
+        copyText(text);
+      });
+
+      // mood buttons
+      $$("[data-mood]").forEach(btn=>{
+        btn.addEventListener("click", ()=>copyText(btn.getAttribute("data-mood")));
+      });
+
+      // whatsapp
+      const wbtn = $("#whatsBtn");
+      if(WHATSAPP_GROUP.trim()){
+        wbtn.href = WHATSAPP_GROUP.trim();
+        wbtn.textContent = "Open WhatsApp group";
+      }else{
+        wbtn.href = "#";
+        wbtn.textContent = "Add WhatsApp link in code";
+        wbtn.addEventListener("click", (e)=>{
+          e.preventDefault();
+          showToast("Paste WhatsApp link into WHATSAPP_GROUP");
+        });
+      }
+
+      // render content
+      renderPast();
+      renderIdioms(idioms);
+
+      // scroll highlight
+      window.addEventListener("scroll", onScroll, {passive:true});
+      onScroll();
+
+      // little hint
+      showToast("Ready ✅ Use search & shuffle");
+    }
+
+    init();
+  </script>
+</body>
+</html>

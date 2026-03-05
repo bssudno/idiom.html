@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Idioms Club — Library & Tasks</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{font-family:"Poppins",sans-serif;background:#02b11f}
+    a{text-decoration:none;color:inherit}
+    button,input,select{font-family:inherit}
+    html{scroll-behavior:smooth}
+
+    /* Background */
+    .wrapper{
+      min-height:100vh;
+      background:url("img/america.jpg") center/cover no-repeat;
+      padding:28px 0 60px;
+      position:relative;
+    }
+    .overlay{position:absolute;inset:0;background:rgba(0,0,0,.25);pointer-events:none}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+
+    /* Header */
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 0;
+    }
+    .logo{
+      font-size:28px;font-weight:900;text-transform:uppercase;color:#fff;white-space:nowrap;
+      text-shadow:-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,2px 2px 0 #000,0 4px 8px rgba(0,0,0,.6);
+    }
+    nav ul{list-style:none;display:flex;gap:26px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    nav a{color:#fff;font-weight:800}
+    nav a:hover{opacity:.95}
+    .nav-active::after{
+      content:"";display:block;width:42px;height:5px;background:#dc7000;border-radius:10px;margin-top:6px
+    }
+    .btnlink a{
+      background:#228B22;padding:10px 18px;border-radius:8px;display:inline-block;transition:.2s
+    }
+    .btnlink a:hover{background:#f30000cb}
+
+    /* Page sections */
+    .page{display:none}
+    .page.active{display:block}
+
+    /* Panels */
+    .panel{
+      background:rgba(0,0,0,.62);
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:22px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+      padding:22px;
+      color:#fff;
+      margin-top:18px;
+    }
+    .title{
+      font-size:26px;font-weight:900;margin-bottom:8px;
+      text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 3px 6px rgba(0,0,0,.6);
+    }
+    .muted{opacity:.92;font-weight:600;line-height:1.5}
+
+    /* Controls */
+    .controls{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 8px}
+    .input,.select{
+      padding:12px 14px;border-radius:12px;outline:none;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.12);color:#fff;font-weight:700
+    }
+    .input{flex:1 1 260px}
+    .input::placeholder{color:rgba(255,255,255,.75)}
+    .select option{color:#000}
+
+    /* Cards grid */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:10px}
+    .card{
+      grid-column:span 6;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:14px;
+      transition:.2s;
+    }
+    .card:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+    .badge{
+      display:inline-block;font-size:12px;font-weight:900;
+      padding:6px 10px;border-radius:999px;background:rgba(220,112,0,.9);color:#111;margin-bottom:10px
+    }
+    .idiom{
+      font-size:18px;font-weight:900;margin-bottom:8px;
+      text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 3px 6px rgba(0,0,0,.6);
+    }
+    .meaning{font-weight:700;opacity:.95}
+    .example{margin-top:8px;opacity:.95;line-height:1.5;font-weight:600}
+
+    /* Tasks */
+    .task{
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .task h3{
+      font-size:18px;font-weight:900;margin-bottom:10px;
+      text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 3px 6px rgba(0,0,0,.6);
+    }
+
+    /* Fill blanks */
+    .q{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,.22)}
+    .q:last-child{border-bottom:none}
+    .q label{font-weight:700;flex:1 1 520px;line-height:1.4}
+    .q input{
+      width:min(360px,100%);padding:10px 12px;border-radius:12px;outline:none;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.12);color:#fff;font-weight:800
+    }
+
+    /* MCQ */
+    .mcq-item{padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.22)}
+    .mcq-item:last-child{border-bottom:none}
+    .mcq-q{font-weight:800;line-height:1.5}
+    .choices{margin-top:8px;display:grid;gap:8px}
+    .choice{
+      display:flex;gap:10px;align-items:center;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      padding:10px 12px;border-radius:14px;cursor:pointer;user-select:none;transition:.15s
+    }
+    .choice:hover{transform:translateY(-1px);background:rgba(255,255,255,.10)}
+    .choice input{accent-color:#dc7000}
+
+    /* Matching */
+    .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .match-row{
+      display:grid;grid-template-columns:1fr 200px;gap:10px;align-items:center;
+      padding:10px 12px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+    }
+    .match-row .left{font-weight:900}
+    .match-row select{
+      width:100%;padding:10px;border-radius:12px;outline:none;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.12);color:#fff;font-weight:800
+    }
+    .match-row select option{color:#000}
+
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .btn2{
+      background:#228B22;color:#111;border-radius:999px;padding:12px 16px;border:0;
+      font-weight:900;cursor:pointer;transition:.2s
+    }
+    .btn2:hover{transform:translateY(-1px) scale(1.02)}
+    .btnGhost{
+      background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:12px 16px;
+      border:1px solid rgba(255,255,255,.18);font-weight:900;cursor:pointer;transition:.2s
+    }
+    .btnGhost:hover{transform:translateY(-1px)}
+
+    .result{
+      margin-top:12px;font-weight:900;padding:12px 14px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.35);
+      display:none;line-height:1.5
+    }
+
+    /* Responsive */
+    @media (max-width:980px){
+      .card{grid-column:span 12}
+      .match-grid{grid-template-columns:1fr}
+      .match-row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="overlay"></div>
+
+    <div class="container">
+      <header>
+        <div class="logo">IDIOMS.COM</div>
+
+        <nav>
+          <ul id="navList">
+            <li class="nav-item nav-active"><a href="#" id="homeBtn">Idioms</a></li>
+            <li class="nav-item"><a href="#" id="tasksBtn">Tasks</a></li>
+            <li class="nav-item btnlink"><a href="#" id="aboutBtn">About us</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <!-- ================= IDIOMS PAGE ================= -->
+      <section class="page active" id="idiomsPage">
+        <div class="panel">
+          <div class="title">Idioms Library (все идиомы по группам)</div>
+          <div class="muted">Ищи по слову и выбирай группу. Чтобы тренироваться — нажми <b>Tasks</b>.</div>
+
+          <div class="controls">
+            <input class="input" id="searchInput" placeholder="Search: stars, moon, dogs, pressure..." />
+            <select class="select" id="groupSelect">
+              <option value="all">All groups</option>
+              <option value="Life & Feelings">Life & Feelings</option>
+              <option value="Courage & Individuality">Courage & Individuality</option>
+              <option value="Stars & Space">Stars & Space</option>
+              <option value="Animal idioms">Animal idioms</option>
+            </select>
+          </div>
+
+          <div class="grid" id="cardsGrid"></div>
+        </div>
+      </section>
+
+      <!-- ================= TASKS PAGE ================= -->
+      <section class="page" id="tasksPage">
+        <div class="panel">
+          <div class="title">Tasks (3 вида тестов)</div>
+          <div class="muted">1) Заполни пробел • 2) Тест с 3 ответами • 3) Сопоставление</div>
+
+          <!-- ===== 1) Fill in the blanks ===== -->
+          <div class="task" id="fillTask">
+            <h3>Task 1 — Fill in the blanks (напиши идиому)</h3>
+
+            <div class="q">
+              <label>1) During the exam I was ______ ______.</label>
+              <input type="text" data-answer="under pressure" placeholder="Answer..." />
+            </div>
+
+            <div class="q">
+              <label>2) Before you judge, try to ______ in someone’s ______.</label>
+              <input type="text" data-answer="walk in someone’s shoes" placeholder="Answer..." />
+            </div>
+
+            <div class="q">
+              <label>3) He became a doctor, and I want to ______ in his ______.</label>
+              <input type="text" data-answer="follow in someone’s footsteps" placeholder="Answer..." />
+            </div>
+
+            <div class="q">
+              <label>4) She is ambitious — she wants to ______ for the ______.</label>
+              <input type="text" data-answer="reach for the stars" placeholder="Answer..." />
+            </div>
+
+            <div class="q">
+              <label>5) I was ______ the moon when I passed my test.</label>
+              <input type="text" data-answer="over the moon" placeholder="Answer..." />
+            </div>
+
+            <div class="q">
+              <label>6) We eat out ______ in a ______ ______.</label>
+              <input type="text" data-answer="once in a blue moon" placeholder="Answer..." />
+            </div>
+
+            <div class="q">
+              <label>7) Don’t bring up the old fight — let ______ dogs ______.</label>
+              <input type="text" data-answer="let sleeping dogs lie" placeholder="Answer..." />
+            </div>
+
+            <div class="actions">
+              <button class="btn2" id="checkFill">Check</button>
+              <button class="btnGhost" id="resetFill">Reset</button>
+            </div>
+
+            <div class="result" id="fillResult"></div>
+          </div>
+
+          <!-- ===== 2) MCQ ===== -->
+          <div class="task" id="mcqTask">
+            <h3>Task 2 — Multiple choice (3 ответа)</h3>
+
+            <div class="mcq-item" data-correct="C">
+              <div class="mcq-q">1) “Not paying attention / unrealistic” is:</div>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="mcq1" value="A"> A) Out of this world</label>
+                <label class="choice"><input type="radio" name="mcq1" value="B"> B) Written in the stars</label>
+                <label class="choice"><input type="radio" name="mcq1" value="C"> C) On another planet</label>
+              </div>
+            </div>
+
+            <div class="mcq-item" data-correct="A">
+              <div class="mcq-q">2) “An obvious problem nobody talks about” is:</div>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="mcq2" value="A"> A) The elephant in the room</label>
+                <label class="choice"><input type="radio" name="mcq2" value="B"> B) Hold your horses</label>
+                <label class="choice"><input type="radio" name="mcq2" value="C"> C) The lion’s share</label>
+              </div>
+            </div>
+
+            <div class="mcq-item" data-correct="B">
+              <div class="mcq-q">3) “Wait / slow down” is:</div>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="mcq3" value="A"> A) Take the bull by the horns</label>
+                <label class="choice"><input type="radio" name="mcq3" value="B"> B) Hold your horses</label>
+                <label class="choice"><input type="radio" name="mcq3" value="C"> C) Starry-eyed</label>
+              </div>
+            </div>
+
+            <div class="mcq-item" data-correct="C">
+              <div class="mcq-q">4) “Someone pretending to be harmless” is:</div>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="mcq4" value="A"> A) Top dog</label>
+                <label class="choice"><input type="radio" name="mcq4" value="B"> B) Eager beaver</label>
+                <label class="choice"><input type="radio" name="mcq4" value="C"> C) Wolf in sheep’s clothing</label>
+              </div>
+            </div>
+
+            <div class="mcq-item" data-correct="A">
+              <div class="mcq-q">5) “Think creatively / differently” is:</div>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="mcq5" value="A"> A) Think outside the box</label>
+                <label class="choice"><input type="radio" name="mcq5" value="B"> B) Barking up the wrong tree</label>
+                <label class="choice"><input type="radio" name="mcq5" value="C"> C) Straight from the horse’s mouth</label>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn2" id="checkMcq">Check</button>
+              <button class="btnGhost" id="resetMcq">Reset</button>
+            </div>
+
+            <div class="result" id="mcqResult"></div>
+          </div>
+
+          <!-- ===== 3) Matching ===== -->
+          <div class="task" id="matchTask">
+            <h3>Task 3 — Matching (сопоставление)</h3>
+            <div class="muted">Выбери правильное значение для каждой идиомы.</div>
+
+            <div class="match-grid" id="matchGrid"></div>
+
+            <div class="actions">
+              <button class="btn2" id="checkMatch">Check</button>
+              <button class="btnGhost" id="resetMatch">Reset</button>
+              <button class="btnGhost" id="backToIdioms">Back to Idioms</button>
+            </div>
+
+            <div class="result" id="matchResult"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT PAGE ================= -->
+      <section class="page" id="aboutPage">
+        <div class="panel">
+          <div class="title">About our club</div>
+          <div class="muted" style="font-size:18px;">
+            We have a club in <b>American Corner</b>, and if you want to join us go to <b>Pushkin Library</b>.
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // ================= IDIOMS DATA =================
+    const IDIOMS = [
+      // Life & Feelings
+      { group: "Life & Feelings", idiom: "Under pressure", meaning: "Под давлением, в стрессе", example: "During exams I’m under pressure, but I try to stay calm." },
+      { group: "Life & Feelings", idiom: "Walk in someone’s shoes", meaning: "Поставить себя на место другого", example: "Try to walk in someone’s shoes before you judge." },
+      { group: "Life & Feelings", idiom: "Follow in someone’s footsteps", meaning: "Идти по стопам", example: "He followed in his father’s footsteps and became a teacher." },
+
+      // Courage & Individuality
+      { group: "Courage & Individuality", idiom: "Think outside the box", meaning: "Мыслить нестандартно", example: "We must think outside the box to solve it." },
+      { group: "Courage & Individuality", idiom: "Go against the tide", meaning: "Идти против течения", example: "She went against the tide and chose her own way." },
+      { group: "Courage & Individuality", idiom: "Seize the day", meaning: "Пользоваться моментом (Carpe Diem)", example: "Don’t wait—seize the day." },
+      { group: "Stars & Space", idiom: "Reach for the stars", meaning: "Ставить большие цели", example: "She’s reaching for the stars with her career plans." },
+
+      // Stars & Space
+      { group: "Stars & Space", idiom: "Over the moon", meaning: "Очень счастлив", example: "I was over the moon when I passed my test." },
+      { group: "Stars & Space", idiom: "Once in a blue moon", meaning: "Очень редко", example: "We eat out once in a blue moon." },
+      { group: "Stars & Space", idiom: "Out of this world", meaning: "Потрясающий / фантастический", example: "That movie was out of this world!" },
+      { group: "Stars & Space", idiom: "On another planet", meaning: "Не в теме / не внимателен", example: "He was on another planet during class." },
+      { group: "Stars & Space", idiom: "Written in the stars", meaning: "Предопределено", example: "Their friendship felt written in the stars." },
+      { group: "Stars & Space", idiom: "Thank your lucky stars", meaning: "Быть благодарным за удачу", example: "Thank your lucky stars you caught the bus!" },
+      { group: "Stars & Space", idiom: "Starry-eyed", meaning: "Мечтательный / слишком наивно надеется", example: "She’s starry-eyed about becoming famous." },
+
+      // Animal idioms
+      { group: "Animal idioms", idiom: "Barking up the wrong tree", meaning: "Искать/винить не там", example: "You’re barking up the wrong tree." },
+      { group: "Animal idioms", idiom: "The elephant in the room", meaning: "Очевидная проблема, о которой молчат", example: "Let’s discuss the elephant in the room." },
+      { group: "Animal idioms", idiom: "Let sleeping dogs lie", meaning: "Не поднимать старые проблемы", example: "Let sleeping dogs lie." },
+      { group: "Animal idioms", idiom: "Take the bull by the horns", meaning: "Смело взяться за проблему", example: "She took the bull by the horns." },
+      { group: "Animal idioms", idiom: "A fish out of water", meaning: "Не в своей тарелке", example: "I felt like a fish out of water." },
+      { group: "Animal idioms", idiom: "Hold your horses", meaning: "Подожди / не торопись", example: "Hold your horses — we’re not ready." },
+      { group: "Animal idioms", idiom: "Monkey see, monkey do", meaning: "Повторять за другими бездумно", example: "Kids learn by monkey see, monkey do." },
+      { group: "Animal idioms", idiom: "The lion’s share", meaning: "Самая большая часть", example: "She did the lion’s share of the work." },
+      { group: "Animal idioms", idiom: "Kill two birds with one stone", meaning: "Убить двух зайцев", example: "Walking saves money and exercise — kill two birds with one stone." },
+      { group: "Animal idioms", idiom: "Like a deer in headlights", meaning: "Оцепенеть от страха/шока", example: "He looked like a deer in headlights." },
+      { group: "Animal idioms", idiom: "Straight from the horse’s mouth", meaning: "Из первоисточника", example: "I heard it straight from the horse’s mouth." },
+      { group: "Animal idioms", idiom: "Wolf in sheep’s clothing", meaning: "Волк в овечьей шкуре", example: "He’s a wolf in sheep’s clothing." },
+      { group: "Animal idioms", idiom: "Ants in your pants", meaning: "Не может усидеть на месте", example: "He has ants in his pants today." },
+      { group: "Animal idioms", idiom: "Eager beaver", meaning: "Очень трудолюбивый/энтузиаст", example: "She’s an eager beaver at school." },
+      { group: "Animal idioms", idiom: "Top dog", meaning: "Лидер/главный", example: "He’s the top dog in the team." },
+    ];
+
+    // ================= NAV / PAGES =================
+    const pages = {
+      idioms: document.getElementById("idiomsPage"),
+      tasks: document.getElementById("tasksPage"),
+      about: document.getElementById("aboutPage"),
+    };
+
+    const navItems = Array.from(document.querySelectorAll("#navList .nav-item"));
+
+    function setActiveNav(targetId){
+      navItems.forEach(li => li.classList.remove("nav-active"));
+      const el = document.querySelector(`#navList a#${targetId}`);
+      if(el && el.parentElement) el.parentElement.classList.add("nav-active");
+    }
+
+    function showPage(name){
+      Object.values(pages).forEach(p => p.classList.remove("active"));
+      pages[name].classList.add("active");
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    document.getElementById("homeBtn").addEventListener("click",(e)=>{e.preventDefault();showPage("idioms");setActiveNav("homeBtn");});
+    document.getElementById("tasksBtn").addEventListener("click",(e)=>{e.preventDefault();showPage("tasks");setActiveNav("tasksBtn");});
+    document.getElementById("aboutBtn").addEventListener("click",(e)=>{e.preventDefault();showPage("about");setActiveNav("aboutBtn");});
+
+    document.getElementById("backToIdioms").addEventListener("click",()=>{showPage("idioms");setActiveNav("homeBtn");});
+
+    // ================= RENDER IDIOMS =================
+    const cardsGrid = document.getElementById("cardsGrid");
+    const searchInput = document.getElementById("searchInput");
+    const groupSelect = document.getElementById("groupSelect");
+
+    function renderIdioms(){
+      const q = searchInput.value.trim().toLowerCase();
+      const grp = groupSelect.value;
+
+      const filtered = IDIOMS.filter(item=>{
+        const matchesGroup = (grp === "all") || (item.group === grp);
+        const text = (item.idiom+" "+item.meaning+" "+item.example+" "+item.group).toLowerCase();
+        const matchesSearch = (q === "") || text.includes(q);
+        return matchesGroup && matchesSearch;
+      });
+
+      cardsGrid.innerHTML = filtered.map(item => `
+        <div class="card">
+          <div class="badge">${item.group}</div>
+          <div class="idiom">${item.idiom}</div>
+          <div class="meaning">Meaning: ${item.meaning}</div>
+          <div class="example">Example: ${item.example}</div>
+        </div>
+      `).join("");
+
+      if(filtered.length === 0){
+        cardsGrid.innerHTML = `
+          <div class="card" style="grid-column:span 12;text-align:center;">
+            <div class="idiom">No results</div>
+            <div class="meaning">Try another keyword or choose “All groups”.</div>
+          </div>`;
+      }
+    }
+
+    searchInput.addEventListener("input", renderIdioms);
+    groupSelect.addEventListener("change", renderIdioms);
+    renderIdioms();
+
+    // ================= TASKS CHECKERS =================
+    function normalize(s){
+      return (s||"")
+        .toLowerCase()
+        .replace(/’/g,"'")
+        .replace(/\s+/g," ")
+        .trim();
+    }
+
+    // Fill
+    const fillResult = document.getElementById("fillResult");
+    document.getElementById("checkFill").addEventListener("click", ()=>{
+      const inputs = Array.from(document.querySelectorAll("#fillTask input[data-answer]"));
+      let correct = 0;
+
+      inputs.forEach(inp=>{
+        const expected = normalize(inp.dataset.answer);
+        const got = normalize(inp.value);
+
+        const ok = expected === got;
+
+        if(ok){
+          correct++;
+          inp.style.borderColor="rgba(34,139,34,0.9)";
+          inp.style.background="rgba(34,139,34,0.20)";
+        }else{
+          inp.style.borderColor="rgba(220,112,0,0.95)";
+          inp.style.background="rgba(220,112,0,0.18)";
+        }
+      });
+
+      fillResult.style.display="block";
+      fillResult.textContent=`Fill blanks: ${correct} / ${inputs.length}`;
+    });
+
+    document.getElementById("resetFill").addEventListener("click", ()=>{
+      const inputs = Array.from(document.querySelectorAll("#fillTask input[data-answer]"));
+      inputs.forEach(inp=>{
+        inp.value="";
+        inp.style.borderColor="rgba(255,255,255,0.18)";
+        inp.style.background="rgba(255,255,255,0.12)";
+      });
+      fillResult.style.display="none";
+      fillResult.textContent="";
+    });
+
+    // MCQ
+    const mcqResult = document.getElementById("mcqResult");
+    document.getElementById("checkMcq").addEventListener("click", ()=>{
+      const blocks = Array.from(document.querySelectorAll("#mcqTask .mcq-item"));
+      let correct = 0;
+      let answered = 0;
+
+      blocks.forEach((block, i)=>{
+        const correctLetter = block.dataset.correct;
+        const name = `mcq${i+1}`;
+        const picked = document.querySelector(`input[name="${name}"]:checked`);
+        if(picked) answered++;
+
+        const ok = picked && picked.value === correctLetter;
+        block.style.borderRadius="16px";
+        block.style.padding="12px";
+        block.style.background = ok ? "rgba(34,139,34,0.16)" : "rgba(220,112,0,0.14)";
+        block.style.border = ok ? "1px solid rgba(34,139,34,0.35)" : "1px solid rgba(220,112,0,0.35)";
+        if(ok) correct++;
+      });
+
+      mcqResult.style.display="block";
+      mcqResult.textContent=`MCQ: ${correct} / ${blocks.length} (answered ${answered}/${blocks.length})`;
+    });
+
+    document.getElementById("resetMcq").addEventListener("click", ()=>{
+      document.querySelectorAll("#mcqTask input[type='radio']").forEach(r=>r.checked=false);
+      document.querySelectorAll("#mcqTask .mcq-item").forEach(block=>{
+        block.style.background="transparent";
+        block.style.border="none";
+        block.style.padding="12px 0";
+        block.style.borderRadius="0";
+      });
+      mcqResult.style.display="none";
+      mcqResult.textContent="";
+    });
+
+    // Matching
+    const matchGrid = document.getElementById("matchGrid");
+    const matchResult = document.getElementById("matchResult");
+
+    const matchPairs = [
+      { idiom: "Over the moon", meaning: "Extremely happy" },
+      { idiom: "Once in a blue moon", meaning: "Very rarely" },
+      { idiom: "The elephant in the room", meaning: "An obvious problem nobody talks about" },
+      { idiom: "Hold your horses", meaning: "Wait / slow down" },
+      { idiom: "Wolf in sheep’s clothing", meaning: "Someone pretending to be harmless" },
+      { idiom: "Take the bull by the horns", meaning: "Face a problem bravely" },
+    ];
+
+    const meaningsPool = matchPairs.map(p=>p.meaning);
+
+    function shuffle(arr){
+      const a=[...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    function renderMatching(){
+      const shuffled = shuffle(meaningsPool);
+      matchGrid.innerHTML = matchPairs.map((p, idx)=>{
+        const opts = ["(choose)"].concat(shuffled).map(m=>`<option value="${m}">${m}</option>`).join("");
+        return `
+          <div class="match-row" data-correct="${p.meaning}">
+            <div class="left">${idx+1}) ${p.idiom}</div>
+            <select>${opts}</select>
+          </div>`;
+      }).join("");
+    }
+
+    renderMatching();
+
+    document.getElementById("checkMatch").addEventListener("click", ()=>{
+      const rows = Array.from(document.querySelectorAll("#matchGrid .match-row"));
+      let correct=0, answered=0;
+
+      rows.forEach(row=>{
+        const sel=row.querySelector("select");
+        const expected=row.dataset.correct;
+        const got=sel.value;
+
+        if(got && got !== "(choose)") answered++;
+
+        const ok = got === expected;
+        row.style.background = ok ? "rgba(34,139,34,0.16)" : "rgba(220,112,0,0.14)";
+        row.style.border = ok ? "1px solid rgba(34,139,34,0.35)" : "1px solid rgba(220,112,0,0.35)";
+        if(ok) correct++;
+      });
+
+      matchResult.style.display="block";
+      matchResult.textContent=`Matching: ${correct} / ${rows.length} (answered ${answered}/${rows.length})`;
+    });
+
+    document.getElementById("resetMatch").addEventListener("click", ()=>{
+      renderMatching();
+      matchResult.style.display="none";
+      matchResult.textContent="";
+    });
+  </script>
+</body>
+</html>

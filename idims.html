@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Idiom Fun Club — Idioms of the Future Lab</title>
+  <style>
+    :root{
+      --bg:#070a12;
+      --card:#0f1630;
+      --card2:#121b3b;
+      --text:#eaf0ff;
+      --muted:#b9c4ff;
+      --accent:#7c5cff;
+      --accent2:#00e5ff;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(124,92,255,.25), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(0,229,255,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 95%, rgba(124,92,255,.14), transparent 60%),
+        linear-gradient(180deg, #060812 0%, #070a12 40%, #050712 100%);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: rgba(7,10,18,.6);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:12px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      text-decoration:none;
+    }
+    .logo{
+      width:36px; height:36px; border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 25px rgba(124,92,255,.25);
+    }
+    .brand b{letter-spacing:.3px}
+    .menu{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+    }
+    .chip{
+      text-decoration:none;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:14px;
+      transition:.18s transform, .18s background;
+      white-space:nowrap;
+    }
+    .chip:hover{transform: translateY(-1px); background: rgba(255,255,255,.06);}
+    .hero{
+      padding:28px 0 14px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+    }
+    .panel{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel-pad{padding:18px}
+    .kicker{
+      display:inline-flex; gap:8px; align-items:center;
+      color:var(--muted);
+      font-size:14px;
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background: rgba(255,255,255,.03);
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--accent2);
+      box-shadow: 0 0 0 5px rgba(0,229,255,.12);
+    }
+    h1{
+      margin:12px 0 10px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height:1.08;
+      letter-spacing:.2px;
+    }
+    .lead{color:var(--muted); font-size:16px; line-height:1.55; margin:0 0 14px}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      transition:.18s transform, .18s background, .18s border-color;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.18);}
+    .btn.primary{
+      border: none;
+      background: linear-gradient(135deg, var(--accent), #9b7bff);
+      box-shadow: 0 12px 30px rgba(124,92,255,.28);
+    }
+    .btn.primary:hover{background: linear-gradient(135deg, #6b49ff, #a78cff);}
+    .side{
+      display:flex; flex-direction:column; gap:12px;
+      padding:18px;
+      background:
+        radial-gradient(500px 220px at 20% 20%, rgba(0,229,255,.12), transparent 60%),
+        radial-gradient(500px 220px at 80% 35%, rgba(124,92,255,.16), transparent 60%),
+        rgba(255,255,255,.02);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .mini{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(10,16,32,.35);
+      padding:12px;
+    }
+    .mini h3{margin:0 0 8px; font-size:14px; color:var(--muted); font-weight:700; letter-spacing:.3px; text-transform:uppercase}
+    .list{margin:0; padding-left:18px; color:var(--text)}
+    .list li{margin:6px 0; color:var(--muted)}
+    section{padding:14px 0}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-header{
+      padding:14px 16px;
+      background: rgba(255,255,255,.03);
+      border-bottom: 1px solid var(--border);
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .card-header h2{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      background: rgba(255,255,255,.03);
+      white-space:nowrap;
+    }
+    .card-body{padding:16px}
+    .muted{color:var(--muted)}
+    .divider{height:1px; background: var(--border); margin:14px 0}
+    .idioms{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .idiom{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.03);
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .num{
+      width:28px;height:28px;border-radius:10px;
+      background: rgba(124,92,255,.18);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800;
+      color:#d9d2ff;
+      flex:0 0 auto;
+    }
+    .idiom b{display:block; margin-bottom:2px}
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 700px){
+      .two{grid-template-columns:1fr}
+    }
+    .qa{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      padding:12px;
+      border-radius: 14px;
+    }
+    .qa .q{font-weight:800; margin:0 0 6px}
+    .qa .a{margin:0; color:var(--muted)}
+    .task{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .input, select, textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{min-height:120px; resize:vertical}
+    .hint{font-size:13px; color:var(--muted); margin:6px 0 0}
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      background: rgba(15,22,48,.92);
+      border:1px solid var(--border);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      opacity:0; pointer-events:none;
+      transition:.2s opacity, .2s transform;
+    }
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-4px);}
+    footer{
+      padding:24px 0 40px;
+      color:var(--muted);
+      text-align:center;
+    }
+    code.k{
+      display:inline-block; padding:2px 6px; border-radius:8px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color:#dfe6ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:.95em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="Idiom Fun Club">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <b>Idiom Fun Club</b><br>
+            <span class="muted" style="font-size:12px;">Idioms of the Future Lab</span>
+          </div>
+        </a>
+        <nav class="menu" aria-label="Навигация">
+          <a class="chip" href="#icebreak">Ice-break</a>
+          <a class="chip" href="#idioms">Idioms</a>
+          <a class="chip" href="#tasks">Tasks</a>
+          <a class="chip" href="#final">Final</a>
+          <a class="chip" href="#feedback">Feedback</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <main class="container" id="top">
+    <div class="hero">
+      <div class="panel">
+        <div class="panel-pad">
+          <div class="kicker"><span class="dot"></span> Lesson Plan • Future Technologies • Idioms</div>
+          <h1>Idioms of the Future Lab</h1>
+          <p class="lead">
+            Мини-сайт для занятия: разогрев, список идиом, задания и финальный “Reboot Protocol”.
+            Всё можно использовать на уроке с телефона или ноутбука.
+          </p>
+
+          <div class="actions">
+            <button class="btn primary" id="btnStart">Начать урок</button>
+            <button class="btn" id="btnCopyLink">Скопировать ссылку на эту страницу</button>
+          </div>
+
+          <p class="hint">
+            Подсказка: нажми <code class="k">Ctrl</code>+<code class="k">F</code> чтобы быстро найти идиому.
+          </p>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="mini">
+          <h3>Тема</h3>
+          <ul class="list">
+            <li>Будущие технологии</li>
+            <li>Современные/технологические идиомы</li>
+            <li>Командные задания и мини-письмо</li>
+          </ul>
+        </div>
+        <div class="mini">
+          <h3>Быстрые кнопки</h3>
+          <div class="actions" style="margin:0">
+            <a class="btn" href="#tasks" style="text-decoration:none;display:inline-block">К заданиям</a>
+            <a class="btn" href="#final" style="text-decoration:none;display:inline-block">Финал</a>
+            <a class="btn" href="#feedback" style="text-decoration:none;display:inline-block">Feedback</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section id="icebreak">
+      <div class="card">
+        <div class="card-header">
+          <h2>Ice-break: вопросы про будущие технологии</h2>
+          <span class="badge">Warm-up</span>
+        </div>
+        <div class="card-body">
+          <div class="two">
+            <div class="qa">
+              <p class="q">1) What do you think about future technologies?</p>
+              <p class="a">Что ты думаешь о технологиях будущего?</p>
+            </div>
+            <div class="qa">
+              <p class="q">2) Which innovations will change our world the most?</p>
+              <p class="a">Какие инновации сильнее всего изменят мир?</p>
+            </div>
+            <div class="qa">
+              <p class="q">Follow-up: Would you trust an AI doctor?</p>
+              <p class="a">Доверился(лась) бы ИИ-врачу?</p>
+            </div>
+            <div class="qa">
+              <p class="q">Follow-up: Do you think robots will replace people?</p>
+              <p class="a">Роботы заменят людей?</p>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="task">
+            <label class="muted" for="iceNote"><b>Мини-заметка (по желанию):</b> напиши 2–3 идеи</label>
+            <textarea id="iceNote" class="input" placeholder="Например: I would trust an AI doctor if..."></textarea>
+            <div class="actions" style="margin:0">
+              <button class="btn" id="btnSaveIce">Сохранить на этом устройстве</button>
+              <button class="btn" id="btnClearIce">Очистить</button>
+            </div>
+            <p class="hint">Сохранение работает через LocalStorage (останется в этом браузере).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="idioms">
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Idioms (Tech-style)</h2>
+            <span class="badge">10 idioms</span>
+          </div>
+          <div class="card-body">
+            <div class="idioms" id="idiomsList"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Быстрый поиск</h2>
+            <span class="badge">Filter</span>
+          </div>
+          <div class="card-body">
+            <label class="muted" for="search"><b>Введи слово</b> (например: viral, plug, clockwork)</label>
+            <input id="search" class="input" placeholder="Search idioms..." />
+            <p class="hint">Покажет только идиомы, где есть совпадение.</p>
+
+            <div class="divider"></div>
+
+            <label class="muted" for="pick"><b>Выбери идиому</b> → получишь пример</label>
+            <select id="pick" class="input"></select>
+            <div class="mini" style="margin-top:12px">
+              <h3>Example sentence</h3>
+              <div id="exampleBox" class="muted">Выбери идиому, чтобы увидеть пример.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tasks">
+      <div class="grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>Task 1: “Diagnostic Scan” (Match)</h2>
+            <span class="badge">Matching</span>
+          </div>
+          <div class="card-body">
+            <p class="muted" style="margin-top:0">Соедини идиомы и определения, затем нажми “Проверить”.</p>
+
+            <div class="task" id="matchTask"></div>
+
+            <div class="actions">
+              <button class="btn primary" id="btnCheckMatch">Проверить</button>
+              <button class="btn" id="btnResetMatch">Сбросить</button>
+            </div>
+
+            <p class="hint" id="matchResult">—</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Task 3: “Secret Code Room” (Fill in)</h2>
+            <span class="badge">Gap-fill</span>
+          </div>
+          <div class="card-body">
+            <p class="muted" style="margin-top:0">Вставь правильную идиому (можно на английском, как в списке).</p>
+            <div class="task" id="fillTask"></div>
+
+            <div class="actions">
+              <button class="btn primary" id="btnCheckFill">Проверить</button>
+              <button class="btn" id="btnResetFill">Сбросить</button>
+            </div>
+
+            <p class="hint" id="fillResult">—</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="final">
+      <div class="card">
+        <div class="card-header">
+          <h2>Final Task: “Reboot Protocol”</h2>
+          <span class="badge">Mini-report</span>
+        </div>
+        <div class="card-body">
+          <p class="muted" style="margin-top:0">
+            Напиши короткий report о твоём “изобретении будущего”. Используй 2–4 идиомы из списка.
+          </p>
+
+          <div class="task">
+            <label class="muted" for="invName"><b>Название изобретения</b></label>
+            <input id="invName" class="input" placeholder="Например: HoloTutor 3000" />
+
+            <label class="muted" for="invText"><b>Текст (6–10 предложений)</b></label>
+            <textarea id="invText" class="input" placeholder="Describe how it works, how you created it, and use idioms..."></textarea>
+
+            <div class="actions" style="margin:0">
+              <button class="btn primary" id="btnBuildReport">Собрать красивый текст</button>
+              <button class="btn" id="btnCopyReport">Скопировать</button>
+            </div>
+
+            <div class="mini" style="margin-top:12px">
+              <h3>Готовый текст</h3>
+              <div id="reportOut" class="muted">Пока пусто — нажми “Собрать красивый текст”.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="feedback">
+      <div class="card">
+        <div class="card-header">
+          <h2>Feedback</h2>
+          <span class="badge">@IdiomReview_Bot</span>
+        </div>
+        <div class="card-body">
+          <p class="muted" style="margin-top:0">
+            Здесь можно оставить обратную связь (по желанию). Также можно добавить ссылку на WhatsApp-группу/QR-код, если ты захочешь.
+          </p>
+
+          <div class="two">
+            <div class="qa">
+              <p class="q">Telegram / Bot</p>
+              <p class="a">Ник: <b>@IdiomReview_Bot</b></p>
+              <button class="btn" id="btnCopyBot">Скопировать ник</button>
+            </div>
+            <div class="qa">
+              <p class="q">WhatsApp group</p>
+              <p class="a">Сюда можно вставить ссылку на группу:</p>
+              <input class="input" id="waLink"
+               placeholder="https://chat.whatsapp.com/..." 
+               value="https://chat.whatsapp.com/Fx4iJrcXeKx6fLL4GjLstu?mode=gi_t" />
+              <div class="actions" style="margin:10px 0 0">
+                <button class="btn" id="btnSaveWA">Сохранить</button>
+                <a class="btn" id="btnOpenWA" href="#" target="_blank" rel="noreferrer" style="text-decoration:none">Открыть</a>
+              </div>
+              <p class="hint">Если ссылки нет — оставь поле пустым.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        <b>Idiom Fun Club</b> • Lesson: “Idioms of the Future Lab”<br />
+        <span class="muted">Сайт сделан как удобная страница для урока.</span>
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ------- Data (из PDF) -------
+    const idioms = [
+      { key:"A light-bulb moment", ru:"момент, когда внезапно пришла идея", ex:"I had a light-bulb moment and solved the problem." },
+      { key:"To push someone’s buttons", ru:"спровоцировать / вызвать реакцию", ex:"That comment really pushed my buttons." },
+      { key:"To reboot your thinking", ru:"перезагрузить мышление", ex:"Let’s reboot our thinking and try a new plan." },
+      { key:"To be on the same wavelength", ru:"понимать друг друга", ex:"We were on the same wavelength during the presentation." },
+      { key:"To pull the plug", ru:"отключить / отменить проект", ex:"They pulled the plug on the app after the test failed." },
+      { key:"To break the system", ru:"нарушить порядок, поломать алгоритм", ex:"One bug can break the system in seconds." },
+      { key:"To go viral", ru:"быстро распространиться (как мем/новость)", ex:"The robot dance video went viral overnight." },
+      { key:"To run like clockwork", ru:"работать идеально, без сбоев", ex:"After the update, everything ran like clockwork." },
+      { key:"To push the envelope", ru:"выходить за пределы возможного", ex:"If we want something new, we must push the envelope." },
+      { key:"Rocket science (It’s not rocket science)", ru:"не что-то сложное", ex:"Relax — it’s not rocket science." },
+    ];
+
+    // Task 1 (match) based on PDF (5 items)
+    const matchLeft = [
+      "A light-bulb moment",
+      "Pull the plug",
+      "On the same wavelength",
+      "Go viral",
+      "Push the envelope",
+    ];
+    const matchRight = [
+      { id:"A", text:"stop or cancel something", correct:"Pull the plug" },
+      { id:"B", text:"understand each other", correct:"On the same wavelength" },
+      { id:"C", text:"spread extremely fast", correct:"Go viral" },
+      { id:"D", text:"go beyond limits", correct:"Push the envelope" },
+      { id:"G", text:"a sudden idea", correct:"A light-bulb moment" },
+    ];
+
+    // Task 3 (gap fill) + keys from PDF
+    const fillItems = [
+      { s:"When the robot suddenly started dancing, the video ____.", a:"went viral" },
+      { s:"Let’s ____ and rethink our strategy — the project doesn’t work.", a:"reboot our thinking" },
+      { s:"We need to ____ if we want to invent something new.", a:"push the envelope" },
+      { s:"After hours of testing, everything finally ____.", a:"ran like clockwork" },
+      { s:"When the new hologram idea came to him, he had ____.", a:"a light-bulb moment" },
+    ];
+
+    // ------- Helpers -------
+    const $ = (sel) => document.querySelector(sel);
+    const toast = (msg) => {
+      const t = $("#toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1700);
+    };
+
+    // ------- Render idioms -------
+    const idiomsList = $("#idiomsList");
+    const pick = $("#pick");
+    function renderIdioms(filter=""){
+      idiomsList.innerHTML = "";
+      pick.innerHTML = "";
+
+      const q = filter.trim().toLowerCase();
+      const filtered = idioms.filter(x =>
+        (x.key + " " + x.ru).toLowerCase().includes(q)
+      );
+
+      filtered.forEach((x, i) => {
+        const row = document.createElement("div");
+        row.className = "idiom";
+        row.innerHTML = `
+          <div class="num">${i+1}</div>
+          <div>
+            <b>${x.key}</b>
+            <div class="muted">${x.ru}</div>
+          </div>
+        `;
+        idiomsList.appendChild(row);
+      });
+
+      // picker always shows all (easier)
+      idioms.forEach((x, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = x.key;
+        pick.appendChild(opt);
+      });
+      pick.value = "0";
+      $("#exampleBox").textContent = idioms[0].ex;
+    }
+    renderIdioms();
+
+    $("#search").addEventListener("input", (e) => renderIdioms(e.target.value));
+    pick.addEventListener("change", () => {
+      const i = Number(pick.value);
+      $("#exampleBox").textContent = idioms[i]?.ex || "—";
+    });
+
+    // ------- Ice note save -------
+    const ICE_KEY = "ifc_iceNote";
+    const WA_KEY = "ifc_waLink";
+    const DEFAULT_WA = "https://chat.whatsapp.com/Fx4iJrcXeKx6fLL4GjLstu?mode=gi_t";
+    function loadSaved(){
+      $("#iceNote").value = localStorage.getItem(ICE_KEY) || "";
+      const wa = localStorage.getItem(WA_KEY) || DEFAULT_WA;
+      $("#waLink").value = wa;
+      $("#btnOpenWA").href = wa || "#";
+      $("#btnOpenWA").style.pointerEvents = wa ? "auto" : "none";
+      $("#btnOpenWA").style.opacity = wa ? "1" : ".6";
+    }
+    loadSaved();
+
+    $("#btnSaveIce").addEventListener("click", () => {
+      localStorage.setItem(ICE_KEY, $("#iceNote").value);
+      toast("Сохранено ✅");
+    });
+    $("#btnClearIce").addEventListener("click", () => {
+      $("#iceNote").value = "";
+      localStorage.removeItem(ICE_KEY);
+      toast("Очищено");
+    });
+
+    $("#btnSaveWA").addEventListener("click", () => {
+      const v = $("#waLink").value.trim();
+      localStorage.setItem(WA_KEY, v);
+      $("#btnOpenWA").href = v || "#";
+      $("#btnOpenWA").style.pointerEvents = v ? "auto" : "none";
+      $("#btnOpenWA").style.opacity = v ? "1" : ".6";
+      toast("Ссылка сохранена ✅");
+    });
+
+    // ------- Copy helpers -------
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        toast("Скопировано ✅");
+      }catch{
+        toast("Не удалось скопировать");
+      }
+    }
+
+    $("#btnCopyLink").addEventListener("click", () => copyText(location.href));
+    $("#btnCopyBot").addEventListener("click", () => copyText("@IdiomReview_Bot"));
+
+    $("#btnStart").addEventListener("click", () => {
+      location.hash = "#icebreak";
+      toast("Поехали! 🚀");
+    });
+
+    // ------- Task 1 match UI -------
+    const matchTask = $("#matchTask");
+    const matchState = {};
+    function renderMatch(){
+      matchTask.innerHTML = "";
+      matchLeft.forEach((idiom) => {
+        const wrap = document.createElement("div");
+        wrap.className = "qa";
+        const select = document.createElement("select");
+        select.className = "input";
+        select.dataset.idiom = idiom;
+
+        const defOptions = [{id:"", text:"— выбери определение —"}]
+          .concat(matchRight.map(x => ({id:x.id, text:`${x.id}. ${x.text}`})));
+
+        defOptions.forEach(o => {
+          const opt = document.createElement("option");
+          opt.value = o.id;
+          opt.textContent = o.text;
+          select.appendChild(opt);
+        });
+
+        select.value = matchState[idiom] || "";
+        select.addEventListener("change", () => {
+          matchState[idiom] = select.value;
+        });
+
+        wrap.innerHTML = `<p class="q">${idiom}</p>`;
+        wrap.appendChild(select);
+        matchTask.appendChild(wrap);
+      });
+      $("#matchResult").textContent = "—";
+    }
+    renderMatch();
+
+    $("#btnCheckMatch").addEventListener("click", () => {
+      let correct = 0;
+      let total = matchLeft.length;
+
+      // build map definitionID -> correct idiom
+      const defMap = {};
+      matchRight.forEach(d => defMap[d.id] = d.correct);
+
+      matchLeft.forEach(idiom => {
+        const chosen = matchState[idiom];
+        if(chosen && defMap[chosen] === idiom) correct++;
+      });
+
+      $("#matchResult").textContent = `Результат: ${correct}/${total}.`;
+      toast("Проверено");
+    });
+
+    $("#btnResetMatch").addEventListener("click", () => {
+      for(const k of Object.keys(matchState)) delete matchState[k];
+      renderMatch();
+      toast("Сброшено");
+    });
+
+    // ------- Task 3 fill UI -------
+    const fillTask = $("#fillTask");
+    const fillState = new Array(fillItems.length).fill("");
+    function renderFill(){
+      fillTask.innerHTML = "";
+      fillItems.forEach((it, idx) => {
+        const wrap = document.createElement("div");
+        wrap.className = "qa";
+        wrap.innerHTML = `<p class="q">${idx+1}) ${it.s}</p>`;
+        const input = document.createElement("input");
+        input.className = "input";
+        input.placeholder = "Type idiom...";
+        input.value = fillState[idx];
+        input.addEventListener("input", () => fillState[idx] = input.value);
+        wrap.appendChild(input);
+        fillTask.appendChild(wrap);
+      });
+      $("#fillResult").textContent = "—";
+    }
+    renderFill();
+
+    const norm = (s) => (s || "")
+      .toLowerCase()
+      .replace(/[’']/g,"'")
+      .replace(/\s+/g," ")
+      .trim();
+
+    $("#btnCheckFill").addEventListener("click", () => {
+      let correct = 0;
+      fillItems.forEach((it, i) => {
+        if(norm(fillState[i]) === norm(it.a)) correct++;
+      });
+      $("#fillResult").textContent = `Результат: ${correct}/${fillItems.length}. (Ответы должны совпасть по смыслу/фразе)`;
+      toast("Проверено");
+    });
+
+    $("#btnResetFill").addEventListener("click", () => {
+      for(let i=0;i<fillState.length;i++) fillState[i] = "";
+      renderFill();
+      toast("Сброшено");
+    });
+
+    // ------- Final report builder -------
+    $("#btnBuildReport").addEventListener("click", () => {
+      const name = ($("#invName").value || "").trim() || "My Future Invention";
+      const text = ($("#invText").value || "").trim();
+      if(!text){
+        $("#reportOut").textContent = "Сначала напиши текст в поле выше 🙂";
+        toast("Нет текста");
+        return;
+      }
+
+      // Simple formatting: title + paragraphs
+      const lines = text.split("\n").map(x => x.trim()).filter(Boolean);
+      const body = lines.length ? lines.join("\n\n") : text;
+
+      $("#reportOut").innerHTML =
+        `<b>${escapeHtml(name)}</b><br><br>${escapeHtml(body).replaceAll("\n\n","<br><br>").replaceAll("\n","<br>")}`;
+
+      toast("Готово ✅");
+    });
+
+    $("#btnCopyReport").addEventListener("click", () => {
+      const name = ($("#invName").value || "").trim() || "My Future Invention";
+      const text = ($("#invText").value || "").trim();
+      const out = `${name}\n\n${text}`;
+      copyText(out);
+    });
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+  </script>
+</body>
+</html>

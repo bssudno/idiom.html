@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Idiom Fun Club • Space Travel</title>
+
+  <style>
+    :root{
+      --bg:#05060a;
+      --panel:rgba(20,22,32,.68);
+      --panel2:rgba(10,12,18,.66);
+      --text:#f3f6ff;
+      --muted:#b9c0dd;
+      --accent:#ff3c3c;
+      --accent2:#4db6ff;
+      --ok:#61ff8f;
+      --warn:#ffd666;
+      --line:rgba(255,255,255,.12);
+      --shadow:0 18px 50px rgba(0,0,0,.55);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      background: radial-gradient(1000px 600px at 20% 10%, rgba(77,182,255,.13), transparent 60%),
+                  radial-gradient(900px 700px at 80% 30%, rgba(255,60,60,.10), transparent 60%),
+                  radial-gradient(700px 500px at 50% 80%, rgba(140,110,255,.12), transparent 60%),
+                  var(--bg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* ======= STARFIELD CANVAS LAYER ======= */
+    #stars{
+      position:fixed; inset:0;
+      width:100%; height:100%;
+      z-index:-2;
+      filter: saturate(1.15) contrast(1.05);
+    }
+
+    /* ======= SOFT NEBULA OVERLAY ======= */
+    .nebula{
+      position:fixed; inset:-20%;
+      background:
+        radial-gradient(closest-side at 30% 30%, rgba(77,182,255,.12), transparent 70%),
+        radial-gradient(closest-side at 70% 40%, rgba(255,60,60,.10), transparent 70%),
+        radial-gradient(closest-side at 60% 75%, rgba(140,110,255,.12), transparent 70%);
+      z-index:-1;
+      filter: blur(35px);
+      opacity:.8;
+      pointer-events:none;
+      animation: floatNebula 16s ease-in-out infinite alternate;
+    }
+    @keyframes floatNebula{
+      from{transform: translate3d(-2%, -1%, 0) scale(1.02)}
+      to{transform: translate3d(2%, 1.5%, 0) scale(1.05)}
+    }
+
+    /* ======= HEADER ======= */
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(5,6,10,.82), rgba(5,6,10,.35));
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      max-width:1180px;
+      margin:auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      user-select:none;
+    }
+    .logoMark{
+      width:42px; height:42px;
+      border-radius:14px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,.06) 55%, rgba(255,60,60,.18)),
+                  linear-gradient(135deg, rgba(77,182,255,.35), rgba(140,110,255,.2));
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .logoMark::after{
+      content:"";
+      position:absolute; inset:-30%;
+      background: conic-gradient(from 180deg, transparent, rgba(255,255,255,.18), transparent, rgba(255,255,255,.14), transparent);
+      animation: spin 6s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .brandTitle{
+      line-height:1.05;
+    }
+    .brandTitle b{
+      font-size:18px;
+      letter-spacing:.14em;
+    }
+    .brandTitle span{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:3px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .menu{
+      display:flex; align-items:center; gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .menu a{
+      color:var(--text);
+      text-decoration:none;
+      font-size:14px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid transparent;
+      transition:.2s;
+      opacity:.92;
+    }
+    .menu a:hover{
+      border-color: var(--line);
+      background: rgba(255,255,255,.05);
+      opacity:1;
+    }
+    .pill{
+      display:flex; align-items:center; gap:10px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius:999px;
+      padding:8px 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .pill input{
+      width:210px;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+    }
+    .pill .kbd{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      padding:4px 8px;
+      border-radius:10px;
+      background: rgba(0,0,0,.25);
+    }
+
+    /* ======= LAYOUT ======= */
+    main{max-width:1180px; margin:auto; padding:18px}
+    section{padding:22px 0}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .pill input{width:140px}
+    }
+
+    /* ======= HERO ======= */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius: calc(var(--radius) + 8px);
+      background:
+        radial-gradient(900px 420px at 20% 10%, rgba(255,60,60,.16), transparent 65%),
+        radial-gradient(900px 500px at 80% 30%, rgba(77,182,255,.14), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      min-height: 420px;
+    }
+    .heroInner{
+      padding:28px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+      align-items:center;
+    }
+    @media (max-width: 980px){
+      .heroInner{grid-template-columns:1fr}
+    }
+    .hero h1{
+      margin:0;
+      font-size:46px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .hero h1 .stroke{
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(255,255,255,.7);
+      text-shadow: 0 12px 40px rgba(0,0,0,.65);
+    }
+    .sub{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.55;
+      max-width: 54ch;
+    }
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
+    .btn{
+      border:none;
+      background: linear-gradient(135deg, rgba(255,60,60,.95), rgba(255,110,60,.92));
+      color:white;
+      padding:11px 14px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:650;
+      letter-spacing:.04em;
+      box-shadow: 0 14px 30px rgba(255,60,60,.18);
+      transition:.18s;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn.secondary{
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      box-shadow: none;
+      color:var(--text);
+    }
+    .badges{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .badge{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color:var(--muted);
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+    }
+
+    /* ======= PLANET ART (SVG + CSS) ======= */
+    .planetWrap{
+      position:relative;
+      height:360px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .planet{
+      width:min(360px, 92%);
+      aspect-ratio:1/1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.25), transparent 35%),
+        radial-gradient(circle at 65% 60%, rgba(0,0,0,.38), transparent 52%),
+        radial-gradient(circle at 35% 65%, rgba(255,60,60,.20), transparent 60%),
+        linear-gradient(135deg, rgba(77,182,255,.55), rgba(140,110,255,.35), rgba(255,60,60,.22));
+      box-shadow:
+        inset -40px -60px 90px rgba(0,0,0,.55),
+        0 30px 70px rgba(0,0,0,.65);
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+      animation: drift 6.5s ease-in-out infinite alternate;
+    }
+    @keyframes drift{
+      from{transform: translateY(0) rotate(-2deg)}
+      to{transform: translateY(-8px) rotate(2deg)}
+    }
+    .planet::before{
+      content:"";
+      position:absolute; inset:-20%;
+      background:
+        repeating-linear-gradient(20deg,
+          rgba(255,255,255,.10) 0px,
+          rgba(255,255,255,.10) 8px,
+          rgba(255,255,255,0) 20px,
+          rgba(255,255,255,0) 38px
+        );
+      opacity:.35;
+      transform: rotate(10deg);
+      animation: band 10s linear infinite;
+    }
+    @keyframes band{to{transform: rotate(370deg)}}
+    .ring{
+      position:absolute;
+      width: 120%;
+      height: 42%;
+      border-radius:50%;
+      border: 2px solid rgba(255,255,255,.22);
+      top: 46%;
+      left: -10%;
+      transform: rotate(-16deg);
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,.55));
+      opacity:.9;
+    }
+    .ring::after{
+      content:"";
+      position:absolute; inset:-6px;
+      border-radius:50%;
+      border: 1px solid rgba(77,182,255,.22);
+      transform: rotate(8deg);
+      opacity:.9;
+    }
+
+    /* ======= PANELS / CARDS ======= */
+    .panel{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panelHeader{
+      padding:16px 18px;
+      border-bottom:1px solid var(--line);
+      background: linear-gradient(to bottom, rgba(255,255,255,.04), transparent);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .panelHeader h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .panelBody{padding:16px 18px}
+    .muted{color:var(--muted)}
+    .twoCols{
+      display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    }
+    @media (max-width: 820px){.twoCols{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius: 16px;
+      padding:14px;
+      transition:.18s;
+    }
+    .card:hover{transform: translateY(-2px); background: rgba(255,255,255,.05)}
+    .card h3{
+      margin:0 0 8px 0;
+      font-size:15px;
+      letter-spacing:.02em;
+    }
+    .tag{
+      display:inline-block;
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--line);
+      padding:5px 8px;
+      border-radius:999px;
+      margin-top:10px;
+      background: rgba(0,0,0,.18);
+    }
+    .accent{color:var(--accent)}
+    .accent2{color:var(--accent2)}
+
+    /* ======= LISTS ======= */
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.16);
+      border-radius:16px;
+      padding:12px 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .dot{
+      width:12px; height:12px;
+      border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.08)),
+                  linear-gradient(135deg, rgba(255,60,60,.85), rgba(77,182,255,.75));
+      margin-top:4px;
+      flex:0 0 auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+    .item b{display:block; margin-bottom:4px}
+    .item small{color:var(--muted); line-height:1.45}
+
+    /* ======= TASKS ======= */
+    .taskGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){.taskGrid{grid-template-columns:1fr}}
+    .taskTitle{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .chip{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .sep{height:1px; background: var(--line); margin:12px 0}
+    .row{
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .miniBtn{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      cursor:pointer;
+      transition:.18s;
+      font-weight:600;
+    }
+    .miniBtn:hover{transform: translateY(-1px)}
+    .miniBtn.primary{
+      border:none;
+      background: linear-gradient(135deg, rgba(77,182,255,.92), rgba(140,110,255,.82));
+      box-shadow: 0 14px 30px rgba(77,182,255,.18);
+    }
+
+    /* Match UI */
+    .matchWrap{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      align-items:start;
+    }
+    @media (max-width:720px){.matchWrap{grid-template-columns:1fr}}
+    .matchCol{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+      border-radius:16px;
+      padding:10px;
+    }
+    .matchCol h4{
+      margin:0 0 8px 0;
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .chipBtn{
+      width:100%;
+      text-align:left;
+      padding:10px 10px;
+      margin:8px 0;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      cursor:pointer;
+      transition:.15s;
+      font-weight:650;
+    }
+    .chipBtn:hover{background: rgba(255,255,255,.08)}
+    .chipBtn.selected{
+      outline: 2px solid rgba(77,182,255,.75);
+      background: rgba(77,182,255,.12);
+    }
+    .chipBtn.matched{
+      opacity:.6;
+      border-style:dashed;
+    }
+    .status{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:10px;
+    }
+    .status strong{color:var(--text)}
+    .ok{color:var(--ok)}
+    .bad{color:var(--accent)}
+    .warn{color:var(--warn)}
+
+    /* Fill in blanks */
+    .blanks{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+    .blankRow{
+      display:grid;
+      grid-template-columns: auto 1fr;
+      gap:10px;
+      align-items:center;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+      padding:10px;
+      border-radius:16px;
+    }
+    .blankRow label{color:var(--muted); font-size:13px}
+    select{
+      width:100%;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      outline:none;
+    }
+    option{color:#000}
+    .resultBox{
+      margin-top:10px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius:16px;
+      padding:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    /* Taboo */
+    .tabooBox{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      border-radius:16px;
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .bigWord{
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.04em;
+    }
+    .forbidden{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .forbidden span{
+      font-size:12px;
+      border:1px solid var(--line);
+      padding:6px 10px;
+      border-radius:999px;
+      color:var(--muted);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Footer */
+    footer{
+      margin-top:18px;
+      padding:24px 18px;
+      border-top:1px solid var(--line);
+      color:var(--muted);
+      text-align:center;
+    }
+    .links a{
+      color:var(--text);
+      text-decoration:none;
+      border-bottom:1px dashed rgba(255,255,255,.35);
+    }
+    .links a:hover{color:var(--accent2)}
+  </style>
+</head>
+
+<body>
+  <canvas id="stars"></canvas>
+  <div class="nebula"></div>
+
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="logoMark" aria-hidden="true"></div>
+        <div class="brandTitle">
+          <b>IDIOM FUN CLUB</b>
+          <span>SPACE TRAVEL • lesson page</span>
+        </div>
+      </div>
+
+      <div class="menu">
+        <a href="#home">Home</a>
+        <a href="#ice">Ice-breaking</a>
+        <a href="#idioms">Idioms</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#join">Join</a>
+      </div>
+
+      <div class="pill" title="Поиск по идиомам (Enter)">
+        🔎
+        <input id="search" placeholder="Search idioms…" autocomplete="off" />
+        <span class="kbd">Enter</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="home">
+      <div class="hero">
+        <div class="heroInner">
+          <div>
+            <h1><span class="stroke">SPACE</span> TRAVEL</h1>
+            <div class="sub">
+              Страница по теме “Space Travel” с идиомами и заданиями из презентации:
+              Task 1 (matching), Task 3 (fill in blanks), Task 4 (Taboo), плюс ссылки и блоки клуба. :contentReference[oaicite:1]{index=1}
+            </div>
+
+            <div class="ctaRow">
+              <button class="btn" onclick="goTo('#idioms')">Start idioms</button>
+              <button class="btn secondary" onclick="goTo('#tasks')">Go to tasks</button>
+            </div>
+
+            <div class="badges">
+              <div class="badge">✨ Starry visuals</div>
+              <div class="badge">🪐 Planet animation</div>
+              <div class="badge">🧠 Mini-games</div>
+              <div class="badge">📚 Past idioms</div>
+            </div>
+          </div>
+
+          <div class="planetWrap" aria-hidden="true">
+            <div class="planet">
+              <div class="ring"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ICE BREAKING -->
+    <section id="ice" class="grid">
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>Ice-breaking • Mars Quiz</h2>
+          <span class="chip">from presentation</span>
+        </div>
+        <div class="panelBody">
+          <p class="muted" style="margin-top:0; line-height:1.6">
+            В презентации есть ссылка на интерактив (Mars / Ice-breaking). :contentReference[oaicite:2]{index=2}
+          </p>
+
+          <div class="row">
+            <button class="miniBtn primary" onclick="openLink('https://view.genially.com/6990911199e36a0e9eac7157/mobile-mars-quiz-mobile')">
+              Open Mars Quiz (Genially)
+            </button>
+            <button class="miniBtn" onclick="copyText('https://view.genially.com/6990911199e36a0e9eac7157/mobile-mars-quiz-mobile')">
+              Copy link
+            </button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="twoCols">
+            <div class="card">
+              <h3><span class="accent2">Idea</span> for warm-up</h3>
+              <div class="muted" style="line-height:1.55">
+                Ask students: “Would you like to live on Mars? Why/Why not?”
+                Then open the quiz.
+              </div>
+              <div class="tag">2–4 minutes</div>
+            </div>
+
+            <div class="card">
+              <h3><span class="accent">Quick rules</span></h3>
+              <div class="muted" style="line-height:1.55">
+                1) Pair work<br/>
+                2) Choose answers fast<br/>
+                3) Discuss 1–2 questions after
+              </div>
+              <div class="tag">speaking</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>Mini game</h2>
+          <span class="chip">Task 2</span>
+        </div>
+        <div class="panelBody">
+          <p class="muted" style="margin-top:0; line-height:1.6">
+            В презентации указан мини-игровой сайт (Gimkit). :contentReference[oaicite:3]{index=3}
+          </p>
+
+          <div class="row">
+            <button class="miniBtn primary" onclick="openLink('https://www.gimkit.com/me')">Open Gimkit</button>
+            <button class="miniBtn" onclick="copyText('https://www.gimkit.com/me')">Copy link</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="card">
+            <h3>Teacher tip</h3>
+            <div class="muted" style="line-height:1.55">
+              Create a quick set with 8 idioms (below) and play as review.
+            </div>
+            <div class="tag">review</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IDIOMS -->
+    <section id="idioms" class="grid">
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>Space idioms</h2>
+          <span class="chip">8 idioms set</span>
+        </div>
+        <div class="panelBody">
+          <p class="muted" style="margin-top:0; line-height:1.6">
+            Эти идиомы и значения есть в презентации. :contentReference[oaicite:4]{index=4}
+          </p>
+
+          <div id="idiomList" class="list">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>Past idioms</h2>
+          <span class="chip">previous lessons</span>
+        </div>
+        <div class="panelBody">
+          <p class="muted" style="margin-top:0; line-height:1.6">
+            Набор “Past idioms” из презентации. :contentReference[oaicite:5]{index=5}
+          </p>
+
+          <div class="twoCols" id="pastList">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="tasks">
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>Tasks from presentation</h2>
+          <span class="chip">Task 1–4</span>
+        </div>
+        <div class="panelBody">
+          <div class="taskGrid">
+
+            <!-- TASK 1 MATCH -->
+            <div class="card">
+              <div class="taskTitle">
+                <h3 style="margin:0">Task 1 • Match</h3>
+                <span class="chip">click idiom → meaning</span>
+              </div>
+
+              <div class="muted" style="line-height:1.55">
+                Match the idiom to its meaning. :contentReference[oaicite:6]{index=6}
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="matchWrap">
+                <div class="matchCol">
+                  <h4>Idioms</h4>
+                  <div id="matchIdioms"></div>
+                </div>
+
+                <div class="matchCol">
+                  <h4>Meanings</h4>
+                  <div id="matchMeanings"></div>
+                </div>
+              </div>
+
+              <div class="status" id="matchStatus">Choose <strong>one idiom</strong> and <strong>one meaning</strong>.</div>
+
+              <div class="row" style="margin-top:10px">
+                <button class="miniBtn primary" onclick="resetMatch()">Reset</button>
+                <button class="miniBtn" onclick="showMatchAnswers()">Show answers</button>
+              </div>
+
+              <div class="resultBox" id="matchAnswers" style="display:none"></div>
+            </div>
+
+            <!-- TASK 3 FILL IN BLANKS -->
+            <div class="card">
+              <div class="taskTitle">
+                <h3 style="margin:0">Task 3 • Fill in the blanks</h3>
+                <span class="chip">8 sentences</span>
+              </div>
+
+              <div class="muted" style="line-height:1.55">
+                Choose the correct idiom to complete each sentence. :contentReference[oaicite:7]{index=7}
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="blanks" id="blanks"></div>
+
+              <div class="row" style="margin-top:10px">
+                <button class="miniBtn primary" onclick="checkBlanks()">Check</button>
+                <button class="miniBtn" onclick="resetBlanks()">Reset</button>
+              </div>
+
+              <div class="resultBox" id="blankResult">Pick options and press <b>Check</b>.</div>
+            </div>
+
+            <!-- TASK 4 TABOO -->
+            <div class="card">
+              <div class="taskTitle">
+                <h3 style="margin:0">Task 4 • “Taboo”</h3>
+                <span class="chip">speaking game</span>
+              </div>
+
+              <div class="muted" style="line-height:1.55">
+                One student gets an idiom, others guess. Don’t say the idiom itself. :contentReference[oaicite:8]{index=8}
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="tabooBox">
+                <div class="bigWord" id="tabooWord">Over the moon</div>
+                <div class="muted">Forbidden words:</div>
+                <div class="forbidden" id="tabooForbidden"></div>
+
+                <div class="row">
+                  <button class="miniBtn primary" onclick="newTaboo()">New card</button>
+                  <button class="miniBtn" onclick="toggleTabooAnswer()">Show hint</button>
+                </div>
+
+                <div class="resultBox" id="tabooHint" style="display:none"></div>
+              </div>
+            </div>
+
+            <!-- QUICK QUIZ -->
+            <div class="card">
+              <div class="taskTitle">
+                <h3 style="margin:0">Quick Quiz • 5 questions</h3>
+                <span class="chip">instant check</span>
+              </div>
+
+              <div class="muted" style="line-height:1.55">
+                Быстрая проверка по значениям “Space idioms”.
+              </div>
+
+              <div class="sep"></div>
+
+              <div id="quizBox"></div>
+
+              <div class="row" style="margin-top:10px">
+                <button class="miniBtn primary" onclick="startQuiz()">Start / Restart</button>
+              </div>
+
+              <div class="resultBox" id="quizResult">Press <b>Start</b>.</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOIN -->
+    <section id="join" class="grid">
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>WhatsApp group</h2>
+          <span class="chip">from slide</span>
+        </div>
+        <div class="panelBody">
+          <p class="muted" style="margin-top:0; line-height:1.6">
+            В презентации есть отдельный слайд “WhatsApp Group” с QR-кодом. :contentReference[oaicite:9]{index=9}
+            Здесь я сделал кнопку-заглушку: вставь свою ссылку на группу в коде (см. JS: <b>WHATSAPP_LINK</b>).
+          </p>
+
+          <div class="row">
+            <button class="btn" onclick="openWhatsApp()">Open WhatsApp group</button>
+            <button class="btn secondary" onclick="alert('Вставь ссылку в переменную WHATSAPP_LINK внизу (JS).')">How to add link</button>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="card">
+            <h3>Optional: QR on site</h3>
+            <div class="muted" style="line-height:1.55">
+              Хочешь — я добавлю генерацию QR прямо на страницу (без интернета), чтобы QR появлялся автоматически.
+            </div>
+            <div class="tag">QR generator</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panelHeader">
+          <h2>Feedback</h2>
+          <span class="chip">@IdiomReview_Bot</span>
+        </div>
+        <div class="panelBody">
+          <p class="muted" style="margin-top:0; line-height:1.6">
+            В конце презентации: “Feedback … @IdiomReview_Bot”. :contentReference[oaicite:10]{index=10}
+          </p>
+
+          <div class="card">
+            <h3>Leave feedback</h3>
+            <div class="muted" style="line-height:1.55">
+              Напиши отзыв (по желанию) в Telegram: <b>@IdiomReview_Bot</b>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <button class="miniBtn primary" onclick="copyText('@IdiomReview_Bot')">Copy @IdiomReview_Bot</button>
+              <button class="miniBtn" onclick="alert('Открой Telegram и вставь @IdiomReview_Bot в поиск 👍')">Open tip</button>
+            </div>
+          </div>
+
+          <div class="sep"></div>
+
+          <div class="card">
+            <h3>Lesson credits</h3>
+            <div class="muted" style="line-height:1.55">
+              “Idiom Fun Club • Space Travel” (как на титульном слайде). :contentReference[oaicite:11]{index=11}
+            </div>
+            <div class="tag">club</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="links">
+        Made as a single-file site (HTML+CSS+JS). Based on your “Idiom Fun Club: Space Travel” slides. :contentReference[oaicite:12]{index=12}
+      </div>
+      <div style="margin-top:8px">Tip: press <b>Enter</b> in search to highlight idioms.</div>
+    </footer>
+  </main>
+
+  <script>
+    /* =========================
+       DATA (from presentation)
+       ========================= */
+    const SPACE_IDIOMS = [
+      { idiom: "Reach for the stars", meaning: "Try to achieve something big or ambitious.", example: "She’s reaching for the stars with her career plans." },
+      { idiom: "Over the moon", meaning: "Extremely happy.", example: "I was over the moon when I passed my test." },
+      { idiom: "Once in a blue moon", meaning: "Very rarely.", example: "We eat out once in a blue moon." },
+      { idiom: "Out of this world", meaning: "Amazing / fantastic.", example: "That movie was out of this world!" },
+      { idiom: "On another planet", meaning: "Not paying attention / unrealistic.", example: "He was on another planet during class." },
+      { idiom: "Written in the stars", meaning: "Destined to happen.", example: "Their friendship felt written in the stars." },
+      { idiom: "Thank your lucky stars", meaning: "Be grateful for good luck.", example: "You should thank your lucky stars you caught the bus!" },
+      { idiom: "Starry-eyed", meaning: "Dreamy or overly hopeful.", example: "She’s starry-eyed about becoming famous." }
+    ];
+
+    const PAST_IDIOMS = [
+      { idiom: "Hit the books", ex: "I need to hit the books tonight." },
+      { idiom: "Over the moon", ex: "I was over the moon when I passed the test." },
+      { idiom: "Under the weather", ex: "I feel under the weather today." },
+      { idiom: "In hot water", ex: "He was in hot water for being late." },
+      { idiom: "Butterflies in one's stomach", ex: "I had butterflies in my stomach before the exam." },
+      { idiom: "On the same page", ex: "We are on the same page about the project." },
+      { idiom: "Snowed under", ex: "I am snowed under with homework." },
+      { idiom: "Blow off steam", ex: "He plays football to blow off steam." },
+      { idiom: "Cost an arm and a leg", ex: "That phone costs an arm and a leg." },
+      { idiom: "Feel blue", ex: "She feels blue on rainy days." },
+      { idiom: "A light bulb moment", ex: "It was a light bulb moment when I understood the rule." }
+    ];
+
+    /* Task 1 mapping (same as slide) */
+    const TASK1 = {
+      idioms: [
+        "Reach for the stars",
+        "Over the moon",
+        "Once in a blue moon",
+        "Out of this world",
+        "On another planet",
+        "Written in the stars",
+        "Thank your lucky stars",
+        "Starry-eyed"
+      ],
+      meanings: [
+        "Very hopeful or dreamy",
+        "Amazing or fantastic",
+        "Believe something is destined",
+        "Be grateful for good luck",
+        "Try to achieve something big",
+        "Extremely happy",
+        "Very rarely",
+        "Not paying attention"
+      ],
+      answers: {
+        "Reach for the stars": "Try to achieve something big",
+        "Over the moon": "Extremely happy",
+        "Once in a blue moon": "Very rarely",
+        "Out of this world": "Amazing or fantastic",
+        "On another planet": "Not paying attention",
+        "Written in the stars": "Believe something is destined",
+        "Thank your lucky stars": "Be grateful for good luck",
+        "Starry-eyed": "Very hopeful or dreamy"
+      }
+    };
+
+    /* Task 3 (fill) correct answers */
+    const TASK3_SENTENCES = [
+      { t:"She was ___ when she won the competition", a:"Over the moon" },
+      { t:"That pizza was ___ — really delicious!", a:"Out of this world" },
+      { t:"He only visits us ___", a:"Once in a blue moon" },
+      { t:"You should ___ you didn’t miss the flight", a:"Thank your lucky stars" },
+      { t:"Stop daydreaming — you look like you’re ___", a:"On another planet" },
+      { t:"She’s ___ about becoming famous one day", a:"Starry-eyed" },
+      { t:"The friendship felt ___", a:"Written in the stars" },
+      { t:"Never be afraid to ___", a:"Reach for the stars" }
+    ];
+
+    /* WhatsApp link placeholder (add your link here) */
+    const WHATSAPP_LINK = ""; // <-- paste your WhatsApp invite link here
+
+    /* =========================
+       Build UI
+       ========================= */
+    const idiomList = document.getElementById("idiomList");
+    const pastList = document.getElementById("pastList");
+
+    function renderIdioms(items){
+      idiomList.innerHTML = "";
+      items.forEach(obj=>{
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <div class="dot"></div>
+          <div>
+            <b data-idiom="${escapeHtml(obj.idiom)}">${escapeHtml(obj.idiom)}</b>
+            <small><span class="accent2">${escapeHtml(obj.meaning)}</span><br/>Example: ${escapeHtml(obj.example)}</small>
+          </div>
+        `;
+        idiomList.appendChild(div);
+      });
+    }
+
+    function renderPast(){
+      pastList.innerHTML = "";
+      PAST_IDIOMS.forEach(p=>{
+        const c = document.createElement("div");
+        c.className = "card";
+        c.innerHTML = `
+          <h3>${escapeHtml(p.idiom)}</h3>
+          <div class="muted" style="line-height:1.55">${escapeHtml(p.ex)}</div>
+          <div class="tag">past</div>
+        `;
+        pastList.appendChild(c);
+      });
+    }
+
+    renderIdioms(SPACE_IDIOMS);
+    renderPast();
+
+    /* =========================
+       Search highlight
+       ========================= */
+    const search = document.getElementById("search");
+    search.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){
+        const q = (search.value || "").trim().toLowerCase();
+        highlight(q);
+      }
+    });
+
+    function highlight(q){
+      const nodes = document.querySelectorAll("[data-idiom]");
+      nodes.forEach(n=>{
+        n.style.background = "transparent";
+        n.style.borderRadius = "10px";
+        n.style.padding = "2px 6px";
+      });
+      if(!q) return;
+
+      nodes.forEach(n=>{
+        const txt = n.getAttribute("data-idiom").toLowerCase();
+        if(txt.includes(q)){
+          n.style.background = "rgba(77,182,255,.15)";
+          n.style.outline = "1px solid rgba(77,182,255,.35)";
+        }
+      });
+    }
+
+    /* =========================
+       Task 1 Match (click-click)
+       ========================= */
+    const matchIdioms = document.getElementById("matchIdioms");
+    const matchMeanings = document.getElementById("matchMeanings");
+    const matchStatus = document.getElementById("matchStatus");
+    const matchAnswersBox = document.getElementById("matchAnswers");
+
+    let selectedIdiom = null;
+    let selectedMeaning = null;
+    let matched = new Set();
+    let score = 0;
+
+    function buildMatch(){
+      matchIdioms.innerHTML = "";
+      matchMeanings.innerHTML = "";
+      score = 0;
+      matched.clear();
+      selectedIdiom = null;
+      selectedMeaning = null;
+      matchStatus.innerHTML = `Choose <strong>one idiom</strong> and <strong>one meaning</strong>.`;
+
+      TASK1.idioms.forEach(i=>{
+        const btn = document.createElement("button");
+        btn.className = "chipBtn";
+        btn.textContent = i;
+        btn.onclick = ()=> pickIdiom(btn, i);
+        matchIdioms.appendChild(btn);
+      });
+
+      // shuffle meanings
+      const shuffled = [...TASK1.meanings].sort(()=>Math.random()-0.5);
+      shuffled.forEach(m=>{
+        const btn = document.createElement("button");
+        btn.className = "chipBtn";
+        btn.textContent = m;
+        btn.onclick = ()=> pickMeaning(btn, m);
+        matchMeanings.appendChild(btn);
+      });
+    }
+
+    function pickIdiom(btn, idiom){
+      if(matched.has(idiom)) return;
+      clearSelected(matchIdioms);
+      btn.classList.add("selected");
+      selectedIdiom = idiom;
+      tryMatch();
+    }
+
+    function pickMeaning(btn, meaning){
+      if(isMeaningAlreadyMatched(meaning)) return;
+      clearSelected(matchMeanings);
+      btn.classList.add("selected");
+      selectedMeaning = meaning;
+      tryMatch();
+    }
+
+    function clearSelected(container){
+      [...container.querySelectorAll(".chipBtn")].forEach(b=> b.classList.remove("selected"));
+    }
+
+    function isMeaningAlreadyMatched(meaning){
+      // if any idiom matched to this meaning
+      return Object.entries(TASK1.answers).some(([id, m])=> matched.has(id) && m === meaning);
+    }
+
+    function tryMatch(){
+      if(!selectedIdiom || !selectedMeaning) return;
+
+      const correct = TASK1.answers[selectedIdiom] === selectedMeaning;
+
+      if(correct){
+        matched.add(selectedIdiom);
+        score++;
+        markMatched(selectedIdiom, selectedMeaning);
+        matchStatus.innerHTML = `<span class="ok">✅ Correct!</span> Matched: <strong>${score}/8</strong>`;
+      }else{
+        matchStatus.innerHTML = `<span class="bad">❌ Not correct.</span> Try again.`;
+      }
+
+      selectedIdiom = null;
+      selectedMeaning = null;
+      clearSelected(matchIdioms);
+      clearSelected(matchMeanings);
+
+      if(score === 8){
+        matchStatus.innerHTML = `<span class="ok">🏆 Perfect!</span> You matched all <strong>8/8</strong>.`;
+      }
+    }
+
+    function markMatched(idiom, meaning){
+      // mark idiom button
+      [...matchIdioms.querySelectorAll(".chipBtn")].forEach(b=>{
+        if(b.textContent === idiom){
+          b.classList.add("matched");
+          b.disabled = true;
+        }
+      });
+      // mark meaning button
+      [...matchMeanings.querySelectorAll(".chipBtn")].forEach(b=>{
+        if(b.textContent === meaning){
+          b.classList.add("matched");
+          b.disabled = true;
+        }
+      });
+    }
+
+    function resetMatch(){
+      matchAnswersBox.style.display = "none";
+      buildMatch();
+    }
+
+    function showMatchAnswers(){
+      matchAnswersBox.style.display = "block";
+      const lines = Object.entries(TASK1.answers).map(([i,m])=>`• <b>${escapeHtml(i)}</b> → ${escapeHtml(m)}`);
+      matchAnswersBox.innerHTML = `<div class="muted">Answers:</div><div style="margin-top:8px; line-height:1.65">${lines.join("<br/>")}</div>`;
+    }
+
+    buildMatch();
+
+    /* =========================
+       Task 3 Blanks
+       ========================= */
+    const blanks = document.getElementById("blanks");
+    const blankResult = document.getElementById("blankResult");
+    const idiomOptions = SPACE_IDIOMS.map(x=>x.idiom);
+
+    function buildBlanks(){
+      blanks.innerHTML = "";
+      TASK3_SENTENCES.forEach((s, idx)=>{
+        const row = document.createElement("div");
+        row.className = "blankRow";
+
+        const label = document.createElement("label");
+        label.textContent = (idx+1) + ".";
+
+        const select = document.createElement("select");
+        select.dataset.idx = String(idx);
+
+        const opt0 = document.createElement("option");
+        opt0.value = "";
+        opt0.textContent = "— choose an idiom —";
+        select.appendChild(opt0);
+
+        // shuffle options for fun
+        const shuffled = [...idiomOptions].sort(()=>Math.random()-0.5);
+        shuffled.forEach(o=>{
+          const opt = document.createElement("option");
+          opt.value = o;
+          opt.textContent = o;
+          select.appendChild(opt);
+        });
+
+        const wrap = document.createElement("div");
+        wrap.innerHTML = `<div class="muted" style="margin-bottom:6px">${escapeHtml(s.t)}</div>`;
+        wrap.appendChild(select);
+
+        row.appendChild(label);
+        row.appendChild(wrap);
+        blanks.appendChild(row);
+      });
+      blankResult.innerHTML = "Pick options and press <b>Check</b>.";
+    }
+
+    function checkBlanks(){
+      let correct = 0;
+      const selects = blanks.querySelectorAll("select");
+      selects.forEach(sel=>{
+        const idx = Number(sel.dataset.idx);
+        const right = TASK3_SENTENCES[idx].a;
+        if(sel.value === right) correct++;
+      });
+
+      const total = TASK3_SENTENCES.length;
+      let msg = `Score: <b>${correct}/${total}</b>. `;
+      if(correct === total) msg += `<span class="ok">Perfect ✅</span>`;
+      else if(correct >= 6) msg += `<span class="warn">Almost there ⭐</span>`;
+      else msg += `<span class="bad">Try again 💪</span>`;
+
+      blankResult.innerHTML = msg + `<div class="muted" style="margin-top:8px; line-height:1.6">
+        Tip: use meanings from the “Space idioms” list above.
+      </div>`;
+    }
+
+    function resetBlanks(){ buildBlanks(); }
+
+    buildBlanks();
+
+    /* =========================
+       Task 4 Taboo
+       ========================= */
+    const tabooWord = document.getElementById("tabooWord");
+    const tabooForbidden = document.getElementById("tabooForbidden");
+    const tabooHint = document.getElementById("tabooHint");
+
+    const TABOO = [
+      { word:"Over the moon", forbidden:["happy","moon","excited"], hint:"It means you feel extremely joyful after something good happens." },
+      { word:"Once in a blue moon", forbidden:["rare","moon","often"], hint:"It means something happens very, very rarely." },
+      { word:"Out of this world", forbidden:["space","great","amazing"], hint:"It means something is fantastic (very impressive)." },
+      { word:"On another planet", forbidden:["dream","attention","listen"], hint:"It means someone is not paying attention / daydreaming." },
+      { word:"Reach for the stars", forbidden:["goal","try","stars"], hint:"It means try to achieve something big or ambitious." },
+      { word:"Written in the stars", forbidden:["destiny","fate","future"], hint:"It means it’s destined to happen." },
+      { word:"Thank your lucky stars", forbidden:["lucky","thanks","stars"], hint:"It means be grateful for good luck." },
+      { word:"Starry-eyed", forbidden:["dreamy","hopeful","eyes"], hint:"It means overly hopeful / dreamy about something." }
+    ];
+
+    function newTaboo(){
+      const c = TABOO[Math.floor(Math.random()*TABOO.length)];
+      tabooWord.textContent = c.word;
+      tabooForbidden.innerHTML = "";
+      c.forbidden.forEach(w=>{
+        const s = document.createElement("span");
+        s.textContent = w;
+        tabooForbidden.appendChild(s);
+      });
+      tabooHint.style.display = "none";
+      tabooHint.textContent = c.hint;
+    }
+
+    function toggleTabooAnswer(){
+      if(tabooHint.style.display === "none"){
+        const card = TABOO.find(x=>x.word === tabooWord.textContent);
+        tabooHint.textContent = card ? card.hint : "Hint not found.";
+        tabooHint.style.display = "block";
+      }else{
+        tabooHint.style.display = "none";
+      }
+    }
+
+    newTaboo();
+
+    /* =========================
+       Quick Quiz
+       ========================= */
+    const quizBox = document.getElementById("quizBox");
+    const quizResult = document.getElementById("quizResult");
+    let quizState = null;
+
+    function startQuiz(){
+      const pool = [...SPACE_IDIOMS].sort(()=>Math.random()-0.5).slice(0,5);
+
+      quizState = pool.map(q=>{
+        const correct = q.meaning;
+        const wrong = [...SPACE_IDIOMS]
+          .filter(x=>x.meaning !== correct)
+          .sort(()=>Math.random()-0.5)
+          .slice(0,2)
+          .map(x=>x.meaning);
+
+        const options = [correct, ...wrong].sort(()=>Math.random()-0.5);
+
+        return { idiom:q.idiom, correct, options, picked:null };
+      });
+
+      renderQuiz();
+      quizResult.innerHTML = "Choose answers, then press <b>Check quiz</b>.";
+    }
+
+    function renderQuiz(){
+      quizBox.innerHTML = "";
+      quizState.forEach((q, idx)=>{
+        const wrap = document.createElement("div");
+        wrap.className = "card";
+        wrap.style.marginBottom = "10px";
+        wrap.innerHTML = `
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:center">
+            <div><b>${idx+1}. ${escapeHtml(q.idiom)}</b></div>
+            <span class="tag">meaning</span>
+          </div>
+          <div class="muted" style="margin-top:8px">Choose the correct meaning:</div>
+          <div class="row" style="margin-top:10px" id="q_${idx}"></div>
+        `;
+        quizBox.appendChild(wrap);
+
+        const row = wrap.querySelector("#q_"+idx);
+        q.options.forEach(opt=>{
+          const b = document.createElement("button");
+          b.className = "miniBtn";
+          b.textContent = opt;
+          b.onclick = ()=> pickQuiz(idx, opt, b, row);
+          row.appendChild(b);
+        });
+      });
+
+      const controls = document.createElement("div");
+      controls.className = "row";
+      controls.style.marginTop = "10px";
+      controls.innerHTML = `
+        <button class="miniBtn primary" id="checkQuizBtn">Check quiz</button>
+        <button class="miniBtn" id="resetQuizBtn">Reset picks</button>
+      `;
+      quizBox.appendChild(controls);
+
+      document.getElementById("checkQuizBtn").onclick = checkQuiz;
+      document.getElementById("resetQuizBtn").onclick = resetQuizPicks;
+    }
+
+    function pickQuiz(qIndex, opt, btn, row){
+      quizState[qIndex].picked = opt;
+      [...row.querySelectorAll("button")].forEach(b=>{
+        b.style.outline = "none";
+        b.style.background = "rgba(255,255,255,.05)";
+      });
+      btn.style.outline = "2px solid rgba(255,60,60,.55)";
+      btn.style.background = "rgba(255,60,60,.12)";
+    }
+
+    function resetQuizPicks(){
+      quizState.forEach(q=> q.picked = null);
+      renderQuiz();
+      quizResult.innerHTML = "Choose answers, then press <b>Check quiz</b>.";
+    }
+
+    function checkQuiz(){
+      let correct = 0;
+      let missed = [];
+      quizState.forEach(q=>{
+        if(q.picked === q.correct) correct++;
+        else missed.push(`• <b>${escapeHtml(q.idiom)}</b> → ${escapeHtml(q.correct)}`);
+      });
+
+      let msg = `Score: <b>${correct}/${quizState.length}</b>. `;
+      if(correct === quizState.length) msg += `<span class="ok">Perfect ✅</span>`;
+      else if(correct >= 4) msg += `<span class="warn">Nice ⭐</span>`;
+      else msg += `<span class="bad">Keep practicing 💪</span>`;
+
+      if(missed.length){
+        msg += `<div class="muted" style="margin-top:10px; line-height:1.6">Correct answers:</div>
+                <div style="margin-top:6px; line-height:1.65">${missed.join("<br/>")}</div>`;
+      }
+      quizResult.innerHTML = msg;
+    }
+
+    startQuiz();
+
+    /* =========================
+       Helpers / Nav
+       ========================= */
+    function goTo(hash){
+      const el = document.querySelector(hash);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+    function openLink(url){ window.open(url, "_blank"); }
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Copied ✅");
+      }catch{
+        prompt("Copy:", text);
+      }
+    }
+    function openWhatsApp(){
+      if(!WHATSAPP_LINK){
+        alert("Сначала вставь ссылку WhatsApp в переменную WHATSAPP_LINK (внизу в JS).");
+        return;
+      }
+      window.open(WHATSAPP_LINK, "_blank");
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    /* =========================
+       Starfield (Canvas drawing)
+       ========================= */
+    const canvas = document.getElementById("stars");
+    const ctx = canvas.getContext("2d");
+    let W,H,stars;
+
+    function resize(){
+      W = canvas.width = Math.floor(window.innerWidth * devicePixelRatio);
+      H = canvas.height = Math.floor(window.innerHeight * devicePixelRatio);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+
+      // (re)create stars
+      const count = Math.floor((window.innerWidth * window.innerHeight) / 12000);
+      stars = new Array(count).fill(0).map(()=>({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: (Math.random()*1.6 + 0.4) * devicePixelRatio,
+        a: Math.random()*0.9 + 0.1,
+        s: (Math.random()*0.35 + 0.05) * devicePixelRatio
+      }));
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    let t = 0;
+    function animate(){
+      t += 0.006;
+      ctx.clearRect(0,0,W,H);
+
+      // subtle space gradient
+      const g = ctx.createRadialGradient(W*0.2, H*0.2, 0, W*0.2, H*0.2, Math.max(W,H));
+      g.addColorStop(0, "rgba(77,182,255,0.08)");
+      g.addColorStop(0.35, "rgba(140,110,255,0.05)");
+      g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      // stars
+      for(const st of stars){
+        st.y += st.s;
+        if(st.y > H) st.y = -10 * devicePixelRatio;
+
+        const tw = 0.35 + 0.65*Math.sin(t + st.x*0.0009);
+        ctx.globalAlpha = st.a * tw;
+
+        ctx.beginPath();
+        ctx.arc(st.x, st.y, st.r, 0, Math.PI*2);
+        ctx.fillStyle = "white";
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
